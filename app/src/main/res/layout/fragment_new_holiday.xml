@@ -6,6 +6,7 @@
     tools:context="com.mikepconroy.traveljournal.fragments.holidays.HolidayDetailsFragment">
 
     <EditText
+        android:id="@+id/holiday_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp"
@@ -14,7 +15,6 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="250dp"/>
-
 
     <ScrollView
         android:layout_width="match_parent"
@@ -35,43 +35,61 @@
         </LinearLayout>
     </ScrollView>
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center">
         <TextView
             android:id="@+id/holiday_start_date_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:text="@string/holiday_start_date_label" />
         <Button
             android:id="@+id/holiday_start_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:text="@string/holiday_start_date" />
     </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/holiday_end_date_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:text="@string/holiday_end_date_label" />
 
         <Button
             android:id="@+id/holiday_end_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="@string/holiday_end_date" />
+            android:textSize="15sp"
+            android:text="@string/holiday_end_date"
+            android:layout_centerInParent="true"/>
     </LinearLayout>
 
+    <RelativeLayout android:id="@+id/RelativeLayout01"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+        <Button
+            android:id="@+id/save_holiday_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="60dp"
+            android:paddingRight="60dp"
+            android:text="Save"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
 </LinearLayout>

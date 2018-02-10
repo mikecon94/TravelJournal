@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -94,6 +96,15 @@ public class NewHolidayFragment extends Fragment implements OnBackPressListener 
             }
         });
 
+        Button saveButton = view.findViewById(R.id.save_holiday_button);
+
+        saveButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                saveHoliday();
+            }
+        });
+
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
         return view;
@@ -166,12 +177,39 @@ public class NewHolidayFragment extends Fragment implements OnBackPressListener 
     }
 
     private void saveHoliday(){
-        Toast.makeText(getContext(), "Holiday Saved.", Toast.LENGTH_SHORT).show();
-        getFragmentManager().popBackStack();
+        View view = getView();
+        String name = ((EditText) view.findViewById(R.id.holiday_title)).getText().toString();
+        String notes = ((EditText) view.findViewById(R.id.holiday_notes)).getText().toString();
+        String startDate = ((Button) view.findViewById(R.id.holiday_start_date)).getText().toString();
+        String endDate = ((Button) view.findViewById(R.id.holiday_end_date)).getText().toString();
+
+        if(name.trim().length() == 0){
+            Log.i(Configuration.TAG, "NewHolidayFragment#saveHoliday: User didn't enter Holiday Name.");
+            Toast.makeText(getContext(), "Please enter a holiday name.", Toast.LENGTH_SHORT).show();
+        } else {
+            final Holiday holiday = new Holiday();
+            holiday.setTitle(name);
+            holiday.setNotes(notes);
+            holiday.setStartDate(startDate);
+            holiday.setEndDate(endDate);
+
+            new InsertHolidayTask().execute(holiday);
+
+            Toast.makeText(getContext(), "Holiday Saved!", Toast.LENGTH_SHORT).show();
+            getFragmentManager().popBackStack();
+        }
     }
 
     public interface NewHolidayFragmentInteractionListener {
         void onFragmentClose();
+    }
+
+    private class InsertHolidayTask extends AsyncTask<Holiday, Void, Void>{
+        @Override
+        protected Void doInBackground(Holiday... holidays) {
+            AppDatabase.getInstance(getContext()).holidayDao().insertHoliday(holidays[0]);
+            return null;
+        }
     }
 
 }
