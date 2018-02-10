@@ -5,15 +5,16 @@
     android:orientation="vertical"
     tools:context="com.mikepconroy.traveljournal.fragments.holidays.HolidayDetailsFragment">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="250dp"/>
-
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:hint="Holiday Name"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="250dp"/>
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -44,7 +45,7 @@
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:text="@string/holiday_start_date_label" />
-        <TextView
+        <Button
             android:id="@+id/holiday_start_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -65,7 +66,7 @@
             android:textSize="20sp"
             android:text="@string/holiday_end_date_label" />
 
-        <TextView
+        <Button
             android:id="@+id/holiday_end_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

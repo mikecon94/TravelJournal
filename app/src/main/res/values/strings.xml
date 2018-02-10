@@ -17,4 +17,5 @@
     <string name="no_data_available">No holidays created yet</string>
     <string name="loading_data">Loading Information...</string>
     <string name="add_holiday_title">Add Holiday</string>
+    <string name="date_picker_title">Date</string>
 </resources>
