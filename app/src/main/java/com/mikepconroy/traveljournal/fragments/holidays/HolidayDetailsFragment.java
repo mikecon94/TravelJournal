@@ -1,0 +1,139 @@
+package com.mikepconroy.traveljournal.fragments.holidays;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.mikepconroy.traveljournal.Configuration;
+import com.mikepconroy.traveljournal.R;
+import com.mikepconroy.traveljournal.model.db.Holiday;
+import com.mikepconroy.traveljournal.model.db.AppDatabase;
+
+/**
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * {@link HolidayDetailsInteractionListener} interface
+ * to handle interaction events.
+ * Use the {@link HolidayDetailsFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class HolidayDetailsFragment extends Fragment {
+
+    private static final String HOLIDAY_ID = "holidayId";
+
+    private int holidayId;
+    private Holiday holiday;
+
+    private HolidayDetailsInteractionListener mListener;
+
+    public HolidayDetailsFragment() {}
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param holidayId The ID of the holiday to display details of.
+     * @return A new instance of fragment HolidayDetailsFragment.
+     */
+    public static HolidayDetailsFragment newInstance(int holidayId) {
+        Log.i(Configuration.TAG, "HolidayDetailsFragment#newInstance: Creating new instance.");
+        HolidayDetailsFragment fragment = new HolidayDetailsFragment();
+        Bundle args = new Bundle();
+        args.putInt(HOLIDAY_ID, holidayId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.i(Configuration.TAG, "HolidayListFragment#onCreate: Creating.");
+        if (getArguments() != null) {
+            int holidayIdArg = getArguments().getInt(HOLIDAY_ID);
+            holidayId = getArguments().getInt(HOLIDAY_ID);
+            Log.i(Configuration.TAG, "HolidayListFragment#onCreate: Holiday ID: " + holidayId);
+
+            //TODO: Move this call to an Async Task.
+            holiday = AppDatabase.getInstance(getContext()).holidayDao().findHolidayById(holidayIdArg);
+
+            if(holiday == null){
+                getActivity().onBackPressed();
+            }
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        Log.i(Configuration.TAG, "HolidayListFragment#onCreateView: Creating View.");
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_holiday_details, container, false);
+        //View view = inflater.inflate(R.layout.fragment_edit_holiday_details, container, false);
+
+
+        //TODO: Look into adding a picture in the view of the holiday.
+        //TextView titleField = view.findViewById(R.id.holiday_title);
+        //titleField.setText(holiday.getTitle());
+        TextView notesField = view.findViewById(R.id.holiday_notes);
+        notesField.setText(holiday.getNotes());
+
+        //TODO: Add options menu here for Editing or Deleting the holiday.
+
+        FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+        fab.setImageResource(R.drawable.ic_arrow_back_white_24dp);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(Configuration.TAG, "HolidayDetailsFragment: FAB Clicked.");
+                //TODO: Start fragment for creating a new Holiday.
+
+                //TODO: The following code can be used for undoing deletions etc.
+                Snackbar.make(view, "Editing Holiday.", Snackbar.LENGTH_SHORT)
+                        .setAction("Action", null).show();
+            }
+        });
+        return view;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Log.i(Configuration.TAG, "HolidayListFragment#onAttach: Attaching.");
+        if (context instanceof HolidayDetailsInteractionListener) {
+            mListener = (HolidayDetailsInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement HolidayDetailsInteractionListener");
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(Configuration.TAG, "HolidayListFragment#onResume: Resuming.");
+        String title = getActivity().getResources().getString(R.string.holiday_details_title);
+        getActivity().setTitle(title);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.i(Configuration.TAG, "HolidayListFragment#onDetach: Detaching.");
+        if (mListener != null) {
+            mListener.onFragmentClose();
+        }
+
+        mListener = null;
+    }
+
+    public interface HolidayDetailsInteractionListener {
+        void onFragmentClose();
+    }
+}
