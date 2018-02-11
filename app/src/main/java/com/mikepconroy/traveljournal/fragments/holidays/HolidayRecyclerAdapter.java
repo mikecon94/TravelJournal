@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mikepconroy.traveljournal.R;
@@ -31,8 +32,10 @@ public class HolidayRecyclerAdapter extends RecyclerView.Adapter<HolidayRecycler
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText("" + mValues.get(position).getId());
-        holder.mContentView.setText(mValues.get(position).getTitle());
+        holder.mImageView.setImageResource(R.drawable.photo_not_found);
+        holder.mTitle.setText(mValues.get(position).getTitle());
+        holder.mStartDate.setText(mValues.get(position).getStartDate());
+        holder.mEndDate.setText(mValues.get(position).getEndDate());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,20 +55,26 @@ public class HolidayRecyclerAdapter extends RecyclerView.Adapter<HolidayRecycler
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+        public final ImageView mImageView;
+        public final TextView mTitle;
+        public final TextView mStartDate;
+        public final TextView mEndDate;
+
+
         public Holiday mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = view.findViewById(R.id.holiday_id);
-            mContentView = view.findViewById(R.id.holiday_title);
+            mImageView = view.findViewById(R.id.holiday_image);
+            mTitle = view.findViewById(R.id.holiday_title);
+            mStartDate = view.findViewById(R.id.holiday_start_date);
+            mEndDate = view.findViewById(R.id.holiday_end_date);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mTitle.getText() + "'";
         }
     }
 }

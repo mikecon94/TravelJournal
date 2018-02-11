@@ -9,19 +9,11 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <ImageView
+            android:id="@+id/holiday_image"
             android:padding="7dp"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/photo_not_found"/>
-
-        <TextView
-            android:id="@+id/holiday_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
-            android:text="Hello"
-            android:textAppearance="?attr/textAppearanceListItem"
-            android:visibility="gone"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -40,6 +32,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
             <TextView
+                android:id="@+id/holiday_start_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/text_margin"
@@ -51,6 +44,7 @@
                 android:text=" - "/>
 
             <TextView
+                android:id="@+id/holiday_end_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="01/01/2019"/>

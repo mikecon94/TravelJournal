@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.AlphaAnimation;
 
+import com.mikepconroy.traveljournal.fragments.holidays.HolidayBaseFragment;
 import com.mikepconroy.traveljournal.fragments.holidays.HolidayDetailsFragment;
 import com.mikepconroy.traveljournal.fragments.holidays.HolidayListFragment;
 import com.mikepconroy.traveljournal.fragments.holidays.NewHolidayFragment;
@@ -28,10 +29,8 @@ public  class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         HolidayListFragment.HolidayListInteractionListener,
         HolidayDetailsFragment.HolidayDetailsInteractionListener,
-        NewHolidayFragment.NewHolidayFragmentInteractionListener {
+        HolidayBaseFragment.HolidayBaseFragmentInteractionListener {
 
-    //Keep track of the current title.
-    private String title = "Holiday";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,13 +169,11 @@ public  class MainActivity extends AppCompatActivity
         transaction.commit();
 
         prepareActionBar(title);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 //        getSupportActionBar().setTitle(title);
 //
+        Toolbar toolbar = findViewById(R.id.toolbar);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -186,13 +183,21 @@ public  class MainActivity extends AppCompatActivity
     }
 
     public void onFragmentClose(){
-        Log.i(Configuration.TAG, "MainActivity: Fragment closed. Setting title to Holidays");
+        Log.i(Configuration.TAG, "MainActivity: Fragment closed. Setting title to Holidays.");
         prepareActionBar("Holidays");
         setUpFab();
     }
 
     public void updateToolbarTitle(String title){
         prepareActionBar(title);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     private void setUpFab(){

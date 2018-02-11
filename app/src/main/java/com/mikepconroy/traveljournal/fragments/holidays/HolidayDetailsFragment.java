@@ -1,14 +1,12 @@
 package com.mikepconroy.traveljournal.fragments.holidays;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,22 +71,23 @@ public class HolidayDetailsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_holiday_details, container, false);
         //View view = inflater.inflate(R.layout.fragment_edit_holiday_details, container, false);
 
-
-        //TODO: Look into adding a picture in the view of the holiday.
-
         //TODO: Add options menu here for Editing or Deleting the holiday.
 
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
-        fab.setImageResource(R.drawable.ic_arrow_back_white_24dp);
+        fab.setImageResource(R.drawable.ic_edit_white_24dp);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.i(Configuration.TAG, "HolidayDetailsFragment: FAB Clicked.");
-                //TODO: Start fragment for creating a new Holiday.
+                //Start the Edit Holiday Fragment.
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_container, EditHolidayFragment.newInstance(holidayId));
+                ft.addToBackStack(null);
+                ft.commit();
 
                 //TODO: The following code can be used for undoing deletions etc.
-                Snackbar.make(view, "Editing Holiday.", Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null).show();
+                //Snackbar.make(view, "Editing Holiday.", Snackbar.LENGTH_SHORT)
+                //        .setAction("Action", null).show();
             }
         });
 
@@ -129,16 +128,15 @@ public class HolidayDetailsFragment extends Fragment {
         mListener = null;
     }
 
-    private void updateHolidayDetails(Holiday holiday){
+    private void updateHolidayDetailsDisplay(Holiday holiday){
         if(holiday == null){
             Log.i(Configuration.TAG, "HolidayDetailsFragment#updateHolidayDetails: Holiday not found.");
             Toast.makeText(getContext(), "Holiday not found :(.", Toast.LENGTH_SHORT).show();
             getActivity().onBackPressed();
         } else {
-            Log.i(Configuration.TAG, "HolidayDetailsFragment#updateHolidayDetails: Updating holiday with name: " + holiday.getTitle());
+            Log.i(Configuration.TAG, "HolidayDetailsFragment#updateHolidayDetails: Displaying holiday with name: " + holiday.getTitle());
 
             //TODO: Include Updating of image here.
-
             mListener.updateToolbarTitle(holiday.getTitle());
             TextView notesField = getActivity().findViewById(R.id.holiday_notes);
             notesField.setText(holiday.getNotes());
@@ -156,7 +154,6 @@ public class HolidayDetailsFragment extends Fragment {
         void updateToolbarTitle(String title);
     }
 
-
     private class LoadHoliday extends AsyncTask<Integer, Void, Holiday> {
         @Override
         protected Holiday doInBackground(Integer... holidayId) {
@@ -166,7 +163,7 @@ public class HolidayDetailsFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Holiday holiday) {
-             updateHolidayDetails(holiday);
+             updateHolidayDetailsDisplay(holiday);
         }
     }
 }

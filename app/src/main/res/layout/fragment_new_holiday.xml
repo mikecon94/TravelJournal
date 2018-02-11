@@ -28,6 +28,7 @@
         />
 
     <ImageView
+        android:id="@+id/holiday_image"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:src="@drawable/photo_not_found"
