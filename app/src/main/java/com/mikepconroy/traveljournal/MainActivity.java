@@ -30,6 +30,9 @@ public  class MainActivity extends AppCompatActivity
         HolidayDetailsFragment.HolidayDetailsInteractionListener,
         NewHolidayFragment.NewHolidayFragmentInteractionListener {
 
+    //Keep track of the current title.
+    private String title = "Holiday";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,26 +55,11 @@ public  class MainActivity extends AppCompatActivity
             // Add the fragment to the 'fragment_container' FrameLayout
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, firstFragment).commit();
-
         }
 
         setContentView(R.layout.activity_main);
-
         prepareActionBar("Holidays");
-
-        final FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i(Configuration.TAG, "MainActivity: FAB Clicked.");
-
-                updateFragment(new NewHolidayFragment(), "Add Holiday");
-
-                //TODO: The following code can be used for undoing deletions etc.
-                //Snackbar.make(view, "Adding new Holiday.", Snackbar.LENGTH_SHORT)
-                //        .setAction("Action", null).show();
-            }
-        });
+        setUpFab();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -180,11 +168,13 @@ public  class MainActivity extends AppCompatActivity
         transaction.addToBackStack(null);
         // Commit the transaction
         transaction.commit();
+
+        prepareActionBar(title);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        getSupportActionBar().setTitle(title);
-
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setTitle(title);
+//
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -198,8 +188,28 @@ public  class MainActivity extends AppCompatActivity
     public void onFragmentClose(){
         Log.i(Configuration.TAG, "MainActivity: Fragment closed. Setting title to Holidays");
         prepareActionBar("Holidays");
+        setUpFab();
+    }
 
-        //TODO this will also need to set the FAB to the plus symbol and use the new holiday.
-        findViewById(R.id.fab).setVisibility(View.VISIBLE);
+    public void updateToolbarTitle(String title){
+        prepareActionBar(title);
+    }
+
+    private void setUpFab(){
+        final FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setImageResource(R.drawable.ic_add_white_24dp);
+        fab.setVisibility(View.VISIBLE);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(Configuration.TAG, "MainActivity: FAB Clicked.");
+
+                updateFragment(new NewHolidayFragment(), "Add Holiday");
+
+                //TODO: The following code can be used for undoing deletions etc.
+                //Snackbar.make(view, "Adding new Holiday.", Snackbar.LENGTH_SHORT)
+                //        .setAction("Action", null).show();
+            }
+        });
     }
 }

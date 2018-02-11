@@ -1,15 +1,20 @@
 package com.mikepconroy.traveljournal.fragments.holidays;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikepconroy.traveljournal.Configuration;
 import com.mikepconroy.traveljournal.R;
@@ -29,7 +34,6 @@ public class HolidayDetailsFragment extends Fragment {
     private static final String HOLIDAY_ID = "holidayId";
 
     private int holidayId;
-    private Holiday holiday;
 
     private HolidayDetailsInteractionListener mListener;
 
@@ -56,16 +60,8 @@ public class HolidayDetailsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Log.i(Configuration.TAG, "HolidayListFragment#onCreate: Creating.");
         if (getArguments() != null) {
-            int holidayIdArg = getArguments().getInt(HOLIDAY_ID);
             holidayId = getArguments().getInt(HOLIDAY_ID);
             Log.i(Configuration.TAG, "HolidayListFragment#onCreate: Holiday ID: " + holidayId);
-
-            //TODO: Move this call to an Async Task.
-            holiday = AppDatabase.getInstance(getContext()).holidayDao().findHolidayById(holidayIdArg);
-
-            if(holiday == null){
-                getActivity().onBackPressed();
-            }
         }
     }
 
@@ -79,10 +75,6 @@ public class HolidayDetailsFragment extends Fragment {
 
 
         //TODO: Look into adding a picture in the view of the holiday.
-        //TextView titleField = view.findViewById(R.id.holiday_title);
-        //titleField.setText(holiday.getTitle());
-        TextView notesField = view.findViewById(R.id.holiday_notes);
-        notesField.setText(holiday.getNotes());
 
         //TODO: Add options menu here for Editing or Deleting the holiday.
 
@@ -99,12 +91,16 @@ public class HolidayDetailsFragment extends Fragment {
                         .setAction("Action", null).show();
             }
         });
+
+        new LoadHoliday().execute(holidayId);
+
         return view;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
         Log.i(Configuration.TAG, "HolidayListFragment#onAttach: Attaching.");
         if (context instanceof HolidayDetailsInteractionListener) {
             mListener = (HolidayDetailsInteractionListener) context;
@@ -133,7 +129,44 @@ public class HolidayDetailsFragment extends Fragment {
         mListener = null;
     }
 
+    private void updateHolidayDetails(Holiday holiday){
+        if(holiday == null){
+            Log.i(Configuration.TAG, "HolidayDetailsFragment#updateHolidayDetails: Holiday not found.");
+            Toast.makeText(getContext(), "Holiday not found :(.", Toast.LENGTH_SHORT).show();
+            getActivity().onBackPressed();
+        } else {
+            Log.i(Configuration.TAG, "HolidayDetailsFragment#updateHolidayDetails: Updating holiday with name: " + holiday.getTitle());
+
+            //TODO: Include Updating of image here.
+
+            mListener.updateToolbarTitle(holiday.getTitle());
+            TextView notesField = getActivity().findViewById(R.id.holiday_notes);
+            notesField.setText(holiday.getNotes());
+            TextView startDateField = getActivity().findViewById(R.id.holiday_start_date);
+            startDateField.setText(holiday.getStartDate());
+            TextView endDateField = getActivity().findViewById(R.id.holiday_end_date);
+            endDateField.setText(holiday.getEndDate());
+
+        }
+
+    }
+
     public interface HolidayDetailsInteractionListener {
         void onFragmentClose();
+        void updateToolbarTitle(String title);
+    }
+
+
+    private class LoadHoliday extends AsyncTask<Integer, Void, Holiday> {
+        @Override
+        protected Holiday doInBackground(Integer... holidayId) {
+            Log.i(Configuration.TAG, "HolidayDetailsFragment#doInBackground: Finding holiday with ID: " + holidayId[0]);
+            return AppDatabase.getInstance(getContext()).holidayDao().findHolidayById(holidayId[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Holiday holiday) {
+             updateHolidayDetails(holiday);
+        }
     }
 }

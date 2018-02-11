@@ -9,7 +9,8 @@
         android:id="@+id/holiday_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/holiday_title" />
+        android:text="@string/holiday_title"
+        android:maxLength="30"/>
 
     <ScrollView
         android:layout_width="match_parent"
