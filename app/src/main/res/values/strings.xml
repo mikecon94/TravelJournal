@@ -18,4 +18,5 @@
     <string name="loading_data">Loading Information...</string>
     <string name="add_holiday_title">Add Holiday</string>
     <string name="date_picker_title">Date</string>
+    <string name="edit_holiday_title">Edit Holiday</string>
 </resources>

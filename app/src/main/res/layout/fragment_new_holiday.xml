@@ -5,13 +5,27 @@
     android:orientation="vertical"
     tools:context="com.mikepconroy.traveljournal.fragments.holidays.HolidayDetailsFragment">
 
+
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.mikepconroy.traveljournal.fragments.holidays.HolidayDetailsFragment">
+
     <EditText
         android:id="@+id/holiday_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:hint="Holiday Name"
-        android:maxLength="30"/>
+        android:maxLines="1"
+        android:maxLength="30"
+        />
 
     <ImageView
         android:layout_width="match_parent"
@@ -94,4 +108,6 @@
             android:text="Save"
             android:layout_centerInParent="true" />
     </RelativeLayout>
+</LinearLayout>
+</ScrollView>
 </LinearLayout>
