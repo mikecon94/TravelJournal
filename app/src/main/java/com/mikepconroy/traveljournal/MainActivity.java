@@ -22,15 +22,14 @@ import com.mikepconroy.traveljournal.fragments.holidays.HolidayDetailsFragment;
 import com.mikepconroy.traveljournal.fragments.holidays.HolidayListFragment;
 import com.mikepconroy.traveljournal.fragments.holidays.NewHolidayFragment;
 import com.mikepconroy.traveljournal.fragments.holidays.OnBackPressListener;
+import com.mikepconroy.traveljournal.fragments.holidays.OnFragmentInteractionListener;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 
 //TODO: Bundle the below interfaces into a single interface.
 public  class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         HolidayListFragment.HolidayListInteractionListener,
-        HolidayDetailsFragment.HolidayDetailsInteractionListener,
-        HolidayBaseFragment.HolidayBaseFragmentInteractionListener {
-
+        OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +122,7 @@ public  class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
-        //TODO: Disable drawer usability on add/edit fragments.
+        //TODO: Disable drawer usability on add/edit fragments. Or keep it usable but confirm dialog.
 
         // Handle navigation view item clicks here.
         int id = item.getItemId();

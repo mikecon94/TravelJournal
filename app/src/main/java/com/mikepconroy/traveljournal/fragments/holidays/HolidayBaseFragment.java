@@ -51,7 +51,7 @@ public abstract class HolidayBaseFragment extends Fragment implements OnBackPres
     //If holidayId is -1 then we are inserting.
     protected int holidayId = -1;
 
-    protected HolidayBaseFragmentInteractionListener mListener;
+    protected OnFragmentInteractionListener mListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -135,8 +135,8 @@ public abstract class HolidayBaseFragment extends Fragment implements OnBackPres
     public void onAttach(Context context) {
         super.onAttach(context);
         Log.i(Configuration.TAG, "HolidayBaseFragment#onAttach: Attaching.");
-        if (context instanceof HolidayBaseFragmentInteractionListener) {
-            mListener = (HolidayBaseFragmentInteractionListener) context;
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement HolidayBaseFragmentInteractionListener");
@@ -176,7 +176,6 @@ public abstract class HolidayBaseFragment extends Fragment implements OnBackPres
                 Uri uri = data.getData();
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
-                    // Log.d(TAG, String.valueOf(bitmap));
                     ImageView imageView = getActivity().findViewById(R.id.holiday_image);
                     imageView.setImageBitmap(bitmap);
                 } catch (IOException e) {
@@ -233,8 +232,4 @@ public abstract class HolidayBaseFragment extends Fragment implements OnBackPres
 
    protected abstract void saveHolidayToDatabase(Holiday holiday);
 
-    public interface HolidayBaseFragmentInteractionListener {
-        void onFragmentClose();
-        void updateToolbarTitle(String title);
-    }
 }

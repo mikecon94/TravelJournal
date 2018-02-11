@@ -22,7 +22,7 @@ import com.mikepconroy.traveljournal.model.db.AppDatabase;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link HolidayDetailsInteractionListener} interface
+ * {@link OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link HolidayDetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -33,7 +33,7 @@ public class HolidayDetailsFragment extends Fragment {
 
     private int holidayId;
 
-    private HolidayDetailsInteractionListener mListener;
+    private OnFragmentInteractionListener mListener;
 
     public HolidayDetailsFragment() {}
 
@@ -101,8 +101,8 @@ public class HolidayDetailsFragment extends Fragment {
         super.onAttach(context);
 
         Log.i(Configuration.TAG, "HolidayListFragment#onAttach: Attaching.");
-        if (context instanceof HolidayDetailsInteractionListener) {
-            mListener = (HolidayDetailsInteractionListener) context;
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement HolidayDetailsInteractionListener");
@@ -147,11 +147,6 @@ public class HolidayDetailsFragment extends Fragment {
 
         }
 
-    }
-
-    public interface HolidayDetailsInteractionListener {
-        void onFragmentClose();
-        void updateToolbarTitle(String title);
     }
 
     private class LoadHoliday extends AsyncTask<Integer, Void, Holiday> {
