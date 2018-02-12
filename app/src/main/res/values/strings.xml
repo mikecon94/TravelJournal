@@ -14,8 +14,10 @@
     <string name="holiday_end_date_label">End Date:</string>
     <string name="holiday_list_title">Holidays</string>
     <string name="holiday_details_title">Holiday Details</string>
-    <string name="no_data_available">No holidays created yet</string>
-    <string name="loading_data">Loading Information...</string>
+    <string name="no_holiday_data_available">No holidays created yet</string>
+    <string name="loading_holiday_data">Loading Holidays...</string>
+    <string name="no_photo_data_available">No photos added yet</string>
+    <string name="loading_photo_data">Loading Photos...</string>
     <string name="add_holiday_title">Add Holiday</string>
     <string name="date_picker_title">Date</string>
     <string name="edit_holiday_title">Edit Holiday</string>

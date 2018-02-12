@@ -16,7 +16,7 @@
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
         tools:context="com.mikepconroy.android.traveljournal.holidays.HolidayListFragment"
-        tools:listitem="@layout/fragment_holiday" />
+        tools:listitem="@layout/fragment_holiday_list_item" />
 
     <TextView
         android:id="@+id/empty_view"
@@ -24,7 +24,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:visibility="gone"
-        android:text="@string/no_data_available" />
+        android:text="@string/no_holiday_data_available" />
 
     <TextView
         android:id="@+id/loading_holidays_view"
@@ -32,5 +32,5 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:visibility="gone"
-        android:text="@string/loading_data" />
+        android:text="@string/loading_holiday_data" />
 </LinearLayout>

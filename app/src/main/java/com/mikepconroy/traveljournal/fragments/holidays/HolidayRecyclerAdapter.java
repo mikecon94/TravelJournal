@@ -25,13 +25,13 @@ public class HolidayRecyclerAdapter extends RecyclerView.Adapter<HolidayRecycler
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_holiday, parent, false);
+                .inflate(R.layout.fragment_holiday_list_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
+        //TODO: Update this to display appropriate image.
         holder.mImageView.setImageResource(R.drawable.photo_not_found);
         holder.mTitle.setText(mValues.get(position).getTitle());
         holder.mStartDate.setText(mValues.get(position).getStartDate());

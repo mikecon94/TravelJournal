@@ -1,5 +1,7 @@
 package com.mikepconroy.traveljournal;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -20,13 +22,16 @@ import com.mikepconroy.traveljournal.fragments.holidays.HolidayListFragment;
 import com.mikepconroy.traveljournal.fragments.holidays.NewHolidayFragment;
 import com.mikepconroy.traveljournal.fragments.OnBackPressListener;
 import com.mikepconroy.traveljournal.fragments.OnFragmentInteractionListener;
+import com.mikepconroy.traveljournal.fragments.photos.PhotoListFragment;
+import com.mikepconroy.traveljournal.fragments.photos.dummy.DummyContent;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 
 //TODO: Bundle the below interfaces into a single interface.
 public  class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         HolidayListFragment.HolidayListInteractionListener,
-        OnFragmentInteractionListener {
+        OnFragmentInteractionListener,
+        PhotoListFragment.OnListFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +39,7 @@ public  class MainActivity extends AppCompatActivity
 
         Log.i(Configuration.TAG, "MainActivity: On Create Called.");
 
+        //TODO: Change the below to use the updateFragment method.
         // Create a new Fragment to be placed in the activity layout
         HolidayListFragment firstFragment = new HolidayListFragment();
 
@@ -121,21 +127,36 @@ public  class MainActivity extends AppCompatActivity
 
         //TODO: Disable drawer usability on add/edit fragments. Or keep it usable but confirm dialog.
 
+        //TODO: Change updateFragment() to not ALWAYS go to the back button.
+
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_holidays) {
+            Log.i(Configuration.TAG, "MainActivity#NavDrawer: Holidays clicked.");
+        } else if (id == R.id.nav_places) {
+            Log.i(Configuration.TAG, "MainActivity#NavDrawer: Places clicked.");
+        } else if (id == R.id.nav_photos) {
+            Log.i(Configuration.TAG, "MainActivity#NavDrawer: Photos clicked.");
+            updateFragment(new PhotoListFragment(),"Photos");
+        } else if (id == R.id.nav_travel_galleries) {
+            Log.i(Configuration.TAG, "MainActivity#NavDrawer: Travel Gallery clicked.");
+        } else if (id == R.id.nav_camera) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Camera clicked.");
         } else if (id == R.id.nav_map) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Map clicked.");
-        } else if (id == R.id.nav_travel_gallery) {
-            Log.i(Configuration.TAG, "MainActivity#NavDrawer: Travel Gallery clicked.");
-        } else if (id == R.id.nav_trips) {
-            Log.i(Configuration.TAG, "MainActivity#NavDrawer: Trips clicked.");
+        } else if (id == R.id.nav_search) {
+            Log.i(Configuration.TAG, "MainActivity#NavDrawer: Search clicked.");
         } else if (id == R.id.nav_settings) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Settings clicked.");
         } else if (id == R.id.nav_about) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: About clicked.");
+             new AlertDialog.Builder(this).setTitle("About Travel Journal")
+                     .setMessage("Mike Conroy \nDC3040\nAston University")
+                     .setPositiveButton("OK", new DialogInterface.OnClickListener(){
+                 @Override
+                 public void onClick(DialogInterface dialog, int which) {}
+             }).setCancelable(true).show();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -194,6 +215,8 @@ public  class MainActivity extends AppCompatActivity
                 onBackPressed();
             }
         });
+        //TODO: Consider using the following to disable expanding of the nav bar.
+        //mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
 
     private void setUpFab(){
@@ -212,5 +235,10 @@ public  class MainActivity extends AppCompatActivity
                 //        .setAction("Action", null).show();
             }
         });
+    }
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+
     }
 }

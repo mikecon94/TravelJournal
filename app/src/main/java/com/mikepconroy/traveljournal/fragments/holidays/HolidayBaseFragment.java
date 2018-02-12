@@ -176,6 +176,7 @@ public abstract class HolidayBaseFragment extends Fragment implements OnBackPres
 
                 //TODO: Update this to store the image in a Photo Entity (?).
                 Uri uri = data.getData();
+                Log.i(Configuration.TAG, "Image URI: " + uri.toString());
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
                     ImageView imageView = getActivity().findViewById(R.id.holiday_image);

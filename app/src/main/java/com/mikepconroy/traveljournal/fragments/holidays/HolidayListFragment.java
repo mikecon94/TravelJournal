@@ -96,6 +96,8 @@ public class HolidayListFragment extends Fragment {
     }
 
     private void loadHolidays(){
+
+        //TODO: Move to separate class.
         new AsyncTask<Void, Void, List<Holiday>>() {
             @Override
             protected List<Holiday> doInBackground(Void... params) {
