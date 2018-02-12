@@ -68,7 +68,7 @@ public abstract class HolidayBaseFragment extends Fragment implements OnBackPres
                              Bundle savedInstanceState) {
         Log.i(Configuration.TAG, "NewHolidayFragment#onCreateView: Creating View.");
 
-        View view = inflater.inflate(R.layout.fragment_new_holiday, container, false);
+        View view = inflater.inflate(R.layout.fragment_holiday_edit_base, container, false);
 
         ImageView holidayPhoto = view.findViewById(R.id.holiday_image);
         holidayPhoto.setOnClickListener(new View.OnClickListener(){
