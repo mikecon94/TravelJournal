@@ -1,4 +1,4 @@
-package com.mikepconroy.traveljournal.fragments.holidays;
+package com.mikepconroy.traveljournal.fragments;
 
 /**
  * Created by mikecon on 10/02/2018.

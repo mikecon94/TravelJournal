@@ -24,6 +24,8 @@ import android.widget.Toast;
 import com.mikepconroy.traveljournal.Configuration;
 import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.fragments.DatePickerFragment;
+import com.mikepconroy.traveljournal.fragments.OnBackPressListener;
+import com.mikepconroy.traveljournal.fragments.OnFragmentInteractionListener;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 
 import java.io.IOException;

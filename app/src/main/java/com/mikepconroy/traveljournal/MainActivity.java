@@ -13,16 +13,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.animation.AlphaAnimation;
 
-import com.mikepconroy.traveljournal.fragments.holidays.HolidayBaseFragment;
 import com.mikepconroy.traveljournal.fragments.holidays.HolidayDetailsFragment;
 import com.mikepconroy.traveljournal.fragments.holidays.HolidayListFragment;
 import com.mikepconroy.traveljournal.fragments.holidays.NewHolidayFragment;
-import com.mikepconroy.traveljournal.fragments.holidays.OnBackPressListener;
-import com.mikepconroy.traveljournal.fragments.holidays.OnFragmentInteractionListener;
+import com.mikepconroy.traveljournal.fragments.OnBackPressListener;
+import com.mikepconroy.traveljournal.fragments.OnFragmentInteractionListener;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 
 //TODO: Bundle the below interfaces into a single interface.

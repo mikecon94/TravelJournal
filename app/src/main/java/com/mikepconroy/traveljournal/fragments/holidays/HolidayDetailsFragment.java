@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -16,6 +15,7 @@ import android.widget.Toast;
 
 import com.mikepconroy.traveljournal.Configuration;
 import com.mikepconroy.traveljournal.R;
+import com.mikepconroy.traveljournal.fragments.OnFragmentInteractionListener;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 import com.mikepconroy.traveljournal.model.db.AppDatabase;
 
