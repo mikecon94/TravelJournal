@@ -138,6 +138,7 @@ public class HolidayListFragment extends Fragment {
         mListener.onFragmentOpened("Holidays", true);
 
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+        fab.setVisibility(View.VISIBLE);
         fab.setImageResource(R.drawable.ic_add_white_24dp);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

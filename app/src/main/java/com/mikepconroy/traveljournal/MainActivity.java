@@ -199,21 +199,6 @@ public  class MainActivity extends AppCompatActivity
         transaction.addToBackStack(null);
         // Commit the transaction
         transaction.commit();
-
-        setActionBarTitle(title);
-        enableNavDrawer();
-
-//        setSupportActionBar(toolbar);
-//        getSupportActionBar().setTitle(title);
-//
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
     }
 
     public void onFragmentClose(){

@@ -75,6 +75,7 @@ public class HolidayDetailsFragment extends Fragment {
 
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.setImageResource(R.drawable.ic_edit_white_24dp);
+        fab.setVisibility(View.VISIBLE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,8 +114,6 @@ public class HolidayDetailsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.i(Configuration.TAG, "HolidayListFragment#onResume: Resuming.");
-        String title = getActivity().getResources().getString(R.string.holiday_details_title);
-        getActivity().setTitle(title);
     }
 
     @Override
