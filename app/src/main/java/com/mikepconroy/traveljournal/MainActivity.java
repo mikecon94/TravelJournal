@@ -56,11 +56,7 @@ public  class MainActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, firstFragment).commit();
         }
-
         setContentView(R.layout.activity_main);
-        setActionBarTitle("Holidays");
-        enableNavDrawer();
-        setUpFab();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -223,8 +219,6 @@ public  class MainActivity extends AppCompatActivity
     public void onFragmentClose(){
         Log.i(Configuration.TAG, "MainActivity: Fragment closed. Setting title to Holidays.");
         //TODO: This section may not be required after the updates. Either way the correct title will need to be worked out.
-        setActionBarTitle("Holidays");
-        setUpFab();
     }
 
     public void onFragmentOpened(String title, boolean navDrawerActive){
@@ -236,24 +230,9 @@ public  class MainActivity extends AppCompatActivity
         }
     }
 
-    private void setUpFab(){
-        //TODO: Move over to the Holidays fragment to handle.
-        final FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setImageResource(R.drawable.ic_add_white_24dp);
-        fab.setVisibility(View.VISIBLE);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i(Configuration.TAG, "MainActivity: FAB Clicked.");
-
-                updateFragment(new NewHolidayFragment(), "Add Holiday");
-
-                //TODO: The following code can be used for undoing deletions etc.
-                //Snackbar.make(view, "Adding new Holiday.", Snackbar.LENGTH_SHORT)
-                //        .setAction("Action", null).show();
-            }
-        });
-    }
+    //TODO: The following code can be used for undoing deletions etc.
+    //Snackbar.make(view, "Adding new Holiday.", Snackbar.LENGTH_SHORT)
+    //        .setAction("Action", null).show();
 
     @Override
     public void onListFragmentInteraction(DummyContent.DummyItem item) {
