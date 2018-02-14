@@ -32,6 +32,7 @@ public class HolidayRecyclerAdapter extends RecyclerView.Adapter<HolidayRecycler
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         //TODO: Update this to display appropriate image.
+        holder.mItem = mValues.get(position);
         holder.mImageView.setImageResource(R.drawable.photo_not_found);
         holder.mTitle.setText(mValues.get(position).getTitle());
         holder.mStartDate.setText(mValues.get(position).getStartDate());
@@ -42,6 +43,7 @@ public class HolidayRecyclerAdapter extends RecyclerView.Adapter<HolidayRecycler
             public void onClick(View v) {
                 if (null != mListener) {
                     Holiday item = holder.mItem;
+
                     mListener.onListFragmentInteraction(item);
                 }
             }
