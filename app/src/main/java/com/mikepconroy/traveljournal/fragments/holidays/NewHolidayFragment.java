@@ -40,7 +40,7 @@ public class NewHolidayFragment extends HolidayBaseFragment {
         super.onResume();
         Log.i(Configuration.TAG, "NewHolidayFragment#onResume: Resuming.");
         String title = getActivity().getResources().getString(R.string.add_holiday_title);
-        mListener.updateToolbarTitle(title);
+        mListener.onFragmentOpened(title, false);
     }
 
     public void saveHolidayToDatabase(Holiday holiday){

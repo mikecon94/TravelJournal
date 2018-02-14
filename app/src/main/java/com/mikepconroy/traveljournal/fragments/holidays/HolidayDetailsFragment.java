@@ -14,15 +14,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mikepconroy.traveljournal.Configuration;
+import com.mikepconroy.traveljournal.OnFragmentUpdateListener;
 import com.mikepconroy.traveljournal.R;
-import com.mikepconroy.traveljournal.fragments.OnFragmentInteractionListener;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 import com.mikepconroy.traveljournal.model.db.AppDatabase;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
+ * {@link OnFragmentUpdateListener} interface
  * to handle interaction events.
  * Use the {@link HolidayDetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -33,7 +33,7 @@ public class HolidayDetailsFragment extends Fragment {
 
     private int holidayId;
 
-    private OnFragmentInteractionListener mListener;
+    private OnFragmentUpdateListener mListener;
 
     public HolidayDetailsFragment() {}
 
@@ -101,8 +101,8 @@ public class HolidayDetailsFragment extends Fragment {
         super.onAttach(context);
 
         Log.i(Configuration.TAG, "HolidayListFragment#onAttach: Attaching.");
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnFragmentUpdateListener) {
+            mListener = (OnFragmentUpdateListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement HolidayDetailsInteractionListener");
@@ -137,16 +137,14 @@ public class HolidayDetailsFragment extends Fragment {
             Log.i(Configuration.TAG, "HolidayDetailsFragment#updateHolidayDetails: Displaying holiday with name: " + holiday.getTitle());
 
             //TODO: Include Updating of image here.
-            mListener.updateToolbarTitle(holiday.getTitle());
+            mListener.onFragmentOpened(holiday.getTitle(), false);
             TextView notesField = getActivity().findViewById(R.id.holiday_notes);
             notesField.setText(holiday.getNotes());
             TextView startDateField = getActivity().findViewById(R.id.holiday_start_date);
             startDateField.setText(holiday.getStartDate());
             TextView endDateField = getActivity().findViewById(R.id.holiday_end_date);
             endDateField.setText(holiday.getEndDate());
-
         }
-
     }
 
     private class LoadHoliday extends AsyncTask<Integer, Void, Holiday> {

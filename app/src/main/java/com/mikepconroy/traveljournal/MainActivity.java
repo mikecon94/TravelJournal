@@ -21,7 +21,6 @@ import com.mikepconroy.traveljournal.fragments.holidays.HolidayDetailsFragment;
 import com.mikepconroy.traveljournal.fragments.holidays.HolidayListFragment;
 import com.mikepconroy.traveljournal.fragments.holidays.NewHolidayFragment;
 import com.mikepconroy.traveljournal.fragments.OnBackPressListener;
-import com.mikepconroy.traveljournal.fragments.OnFragmentInteractionListener;
 import com.mikepconroy.traveljournal.fragments.photos.PhotoListFragment;
 import com.mikepconroy.traveljournal.fragments.photos.dummy.DummyContent;
 import com.mikepconroy.traveljournal.model.db.Holiday;
@@ -30,8 +29,8 @@ import com.mikepconroy.traveljournal.model.db.Holiday;
 public  class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         HolidayListFragment.HolidayListInteractionListener,
-        OnFragmentInteractionListener,
-        PhotoListFragment.OnListFragmentInteractionListener {
+        OnFragmentUpdateListener,
+        PhotoListFragment.OnPhotoListInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,24 +58,44 @@ public  class MainActivity extends AppCompatActivity
         }
 
         setContentView(R.layout.activity_main);
-        prepareActionBar("Holidays");
+        setActionBarTitle("Holidays");
+        enableNavDrawer();
         setUpFab();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void prepareActionBar(String title) {
-        Log.i(Configuration.TAG, "MainActivity: Preparing Action Bar.");
-
+    private void setActionBarTitle(String title) {
+        Log.i(Configuration.TAG, "MainActivity: Setting Title to: " + title);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(title);
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+    }
+
+    private void enableNavDrawer(){
+        Log.i(Configuration.TAG, "MainActivity: Enabling Nav Drawer");
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        DrawerLayout navDrawer = findViewById(R.id.drawer_layout);
+        navDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+                this, navDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        navDrawer.addDrawerListener(toggle);
         toggle.syncState();
+    }
+
+    private void disableNavDrawer(){
+        Log.i(Configuration.TAG, "MainActivity: Disabling Nav Drawer");
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        DrawerLayout navDrawer = findViewById(R.id.drawer_layout);
+        navDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
 
     @Override
@@ -185,7 +204,9 @@ public  class MainActivity extends AppCompatActivity
         // Commit the transaction
         transaction.commit();
 
-        prepareActionBar(title);
+        setActionBarTitle(title);
+        enableNavDrawer();
+
 //        setSupportActionBar(toolbar);
 //        getSupportActionBar().setTitle(title);
 //
@@ -201,25 +222,22 @@ public  class MainActivity extends AppCompatActivity
 
     public void onFragmentClose(){
         Log.i(Configuration.TAG, "MainActivity: Fragment closed. Setting title to Holidays.");
-        prepareActionBar("Holidays");
+        //TODO: This section may not be required after the updates. Either way the correct title will need to be worked out.
+        setActionBarTitle("Holidays");
         setUpFab();
     }
 
-    public void updateToolbarTitle(String title){
-        prepareActionBar(title);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-        //TODO: Consider using the following to disable expanding of the nav bar.
-        //mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    public void onFragmentOpened(String title, boolean navDrawerActive){
+        setActionBarTitle(title);
+        if(navDrawerActive){
+            enableNavDrawer();
+        } else {
+            disableNavDrawer();
+        }
     }
 
     private void setUpFab(){
+        //TODO: Move over to the Holidays fragment to handle.
         final FloatingActionButton fab = findViewById(R.id.fab);
         fab.setImageResource(R.drawable.ic_add_white_24dp);
         fab.setVisibility(View.VISIBLE);

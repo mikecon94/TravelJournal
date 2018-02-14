@@ -22,10 +22,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.mikepconroy.traveljournal.Configuration;
+import com.mikepconroy.traveljournal.OnFragmentUpdateListener;
 import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.fragments.DatePickerFragment;
 import com.mikepconroy.traveljournal.fragments.OnBackPressListener;
-import com.mikepconroy.traveljournal.fragments.OnFragmentInteractionListener;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 
 import java.io.IOException;
@@ -53,7 +53,7 @@ public abstract class HolidayBaseFragment extends Fragment implements OnBackPres
     //If holidayId is -1 then we are inserting.
     protected int holidayId = -1;
 
-    protected OnFragmentInteractionListener mListener;
+    protected OnFragmentUpdateListener mListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -137,8 +137,8 @@ public abstract class HolidayBaseFragment extends Fragment implements OnBackPres
     public void onAttach(Context context) {
         super.onAttach(context);
         Log.i(Configuration.TAG, "HolidayBaseFragment#onAttach: Attaching.");
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnFragmentUpdateListener) {
+            mListener = (OnFragmentUpdateListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement HolidayBaseFragmentInteractionListener");

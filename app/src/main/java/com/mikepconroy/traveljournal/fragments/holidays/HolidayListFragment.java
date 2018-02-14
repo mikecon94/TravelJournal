@@ -3,7 +3,9 @@ package com.mikepconroy.traveljournal.fragments.holidays;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mikepconroy.traveljournal.Configuration;
+import com.mikepconroy.traveljournal.OnFragmentUpdateListener;
 import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 import com.mikepconroy.traveljournal.model.db.AppDatabase;
@@ -90,34 +93,9 @@ public class HolidayListFragment extends Fragment {
             recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
 
-        loadHolidays();
+        new LoadHolidays().execute();
 
         return view;
-    }
-
-    private void loadHolidays(){
-
-        //TODO: Move to separate class.
-        new AsyncTask<Void, Void, List<Holiday>>() {
-            @Override
-            protected List<Holiday> doInBackground(Void... params) {
-
-            /*
-            Use this to simulate slow loading from the DB.
-            try {
-                    Thread.sleep(10000);
-                } catch (Exception e){
-                    Log.e(Configuration.TAG, "ERROR.");
-                }*/
-                return AppDatabase.getInstance(getContext()).holidayDao().getAllHolidays();
-            }
-
-            @Override
-            protected void onPostExecute(List<Holiday> holidays) {
-                Log.i(Configuration.TAG, "HolidayLIstFragment: AsyncTask complete. Retrieved holiday: " + holidays.size());
-                updateHolidayListView(holidays);
-            }
-        }.execute();
     }
 
     private void updateHolidayListView(List<Holiday> holidays) {
@@ -157,8 +135,25 @@ public class HolidayListFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.i(Configuration.TAG, "HolidayListFragment#onResume: Resuming.");
-        String title = getActivity().getResources().getString(R.string.holiday_list_title);
-        getActivity().setTitle(title);
+        mListener.onFragmentOpened("Holidays", true);
+
+        FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+        fab.setImageResource(R.drawable.ic_add_white_24dp);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(Configuration.TAG, "HolidayListFragment: FAB Clicked.");
+                //Start the Edit Holiday Fragment.
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_container, new NewHolidayFragment());
+                ft.addToBackStack(null);
+                ft.commit();
+
+                //TODO: The following code can be used for undoing deletions etc.
+                //Snackbar.make(view, "Editing Holiday.", Snackbar.LENGTH_SHORT)
+                //        .setAction("Action", null).show();
+            }
+        });
     }
 
     @Override
@@ -178,7 +173,20 @@ public class HolidayListFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface HolidayListInteractionListener {
+    public interface HolidayListInteractionListener extends OnFragmentUpdateListener{
         void onListFragmentInteraction(Holiday item);
+    }
+
+    private class LoadHolidays extends AsyncTask<Void, Void, List<Holiday>> {
+        @Override
+        protected List<Holiday> doInBackground(Void... params) {
+            Log.i(Configuration.TAG, "HolidayListFragment#doInBackground: Finding holidays.");
+            return AppDatabase.getInstance(getContext()).holidayDao().getAllHolidays();
+        }
+
+        @Override
+        protected void onPostExecute(List<Holiday> holidays) {
+            Log.i(Configuration.TAG, "HolidayLIstFragment: AsyncTask complete. Retrieved holiday: " + holidays.size());
+            updateHolidayListView(holidays);        }
     }
 }

@@ -5,25 +5,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.mikepconroy.traveljournal.R;
-import com.mikepconroy.traveljournal.fragments.photos.PhotoListFragment.OnListFragmentInteractionListener;
+import com.mikepconroy.traveljournal.fragments.photos.PhotoListFragment.OnPhotoListInteractionListener;
 import com.mikepconroy.traveljournal.fragments.photos.dummy.DummyContent.DummyItem;
 
 import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
+ * specified {@link OnPhotoListInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecyclerViewAdapter.ViewHolder> {
 
     private final List<DummyItem> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private final OnPhotoListInteractionListener mListener;
 
-    public PhotoRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public PhotoRecyclerViewAdapter(List<DummyItem> items, OnPhotoListInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }

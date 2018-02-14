@@ -34,7 +34,7 @@ public class EditHolidayFragment extends HolidayBaseFragment {
         super.onResume();
         Log.i(Configuration.TAG, "EditHolidayFragment#onResume: Resuming.");
         String title = getActivity().getResources().getString(R.string.edit_holiday_title);
-        mListener.updateToolbarTitle(title);
+        mListener.onFragmentOpened(title, false);
         //getActivity().setTitle(title);
         //mListener.
     }
