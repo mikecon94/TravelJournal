@@ -149,11 +149,12 @@ public  class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_holidays) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Holidays clicked.");
+            updateFragment(new HolidayListFragment());
         } else if (id == R.id.nav_places) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Places clicked.");
         } else if (id == R.id.nav_photos) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Photos clicked.");
-            updateFragment(new PhotoListFragment(),"Photos");
+            updateFragment(new PhotoListFragment());
         } else if (id == R.id.nav_travel_galleries) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Travel Gallery clicked.");
         } else if (id == R.id.nav_camera) {
@@ -180,17 +181,17 @@ public  class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(Holiday item) {
+    public void onHolidayListItemInteraction(Holiday item) {
 
         Log.i(Configuration.TAG, "MainActivity#OnListFragmentInteractions:" +
             "Opening HolidayDetailsFragment with item: " + item.getId());
         //Toast.makeText(this, "You clicked " + item.toString(), Toast.LENGTH_SHORT).show();
         HolidayDetailsFragment holidayFragment = HolidayDetailsFragment.newInstance(item.getId());
-        updateFragment(holidayFragment, item.getTitle());
+        updateFragment(holidayFragment);
 
     }
 
-    private void updateFragment(Fragment fragment, String title){
+    private void updateFragment(Fragment fragment){
         FragmentTransaction transaction =
                 getSupportFragmentManager().beginTransaction();
         // Replace whatever is in the fragment_container view with this fragment,
@@ -220,7 +221,7 @@ public  class MainActivity extends AppCompatActivity
     //        .setAction("Action", null).show();
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
-
+    public void onPhotoListItemInteraction(DummyContent.DummyItem item) {
+        //TODO: Open fragment for saving a new photo.
     }
 }

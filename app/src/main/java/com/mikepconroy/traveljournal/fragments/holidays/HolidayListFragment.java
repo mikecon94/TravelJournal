@@ -175,7 +175,7 @@ public class HolidayListFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface HolidayListInteractionListener extends OnFragmentUpdateListener{
-        void onListFragmentInteraction(Holiday item);
+        void onHolidayListItemInteraction(Holiday item);
     }
 
     private class LoadHolidays extends AsyncTask<Void, Void, List<Holiday>> {
@@ -187,7 +187,7 @@ public class HolidayListFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<Holiday> holidays) {
-            Log.i(Configuration.TAG, "HolidayLIstFragment: AsyncTask complete. Retrieved holiday: " + holidays.size());
+            Log.i(Configuration.TAG, "HolidayListFragment: AsyncTask complete. No. of Holidays: " + holidays.size());
             updateHolidayListView(holidays);        }
     }
 }

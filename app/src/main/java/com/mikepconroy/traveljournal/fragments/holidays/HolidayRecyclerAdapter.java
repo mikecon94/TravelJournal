@@ -44,7 +44,7 @@ public class HolidayRecyclerAdapter extends RecyclerView.Adapter<HolidayRecycler
                 if (null != mListener) {
                     Holiday item = holder.mItem;
 
-                    mListener.onListFragmentInteraction(item);
+                    mListener.onHolidayListItemInteraction(item);
                 }
             }
         });

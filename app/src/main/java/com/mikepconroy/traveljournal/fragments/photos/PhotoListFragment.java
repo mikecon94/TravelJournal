@@ -133,6 +133,6 @@ public class PhotoListFragment extends Fragment {
      */
     public interface OnPhotoListInteractionListener extends OnFragmentUpdateListener{
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onPhotoListItemInteraction(DummyItem item);
     }
 }

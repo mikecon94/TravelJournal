@@ -46,7 +46,7 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onPhotoListItemInteraction(holder.mItem);
                 }
             }
         });
