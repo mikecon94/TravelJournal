@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.mikepconroy.traveljournal.Configuration;
 import com.mikepconroy.traveljournal.OnFragmentUpdateListener;
@@ -94,6 +95,9 @@ public class PhotoListFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mListener.onFragmentOpened("Photos", true);
+
+        //TODO: See whether the image height can be programmatically be set here.
+
 
         //TODO: Investigate whether this can be common code to remove the duplication across onResumes.
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
