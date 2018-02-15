@@ -31,7 +31,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class NewHolidayFragment extends HolidayBaseFragment {
+public class NewHolidayFragment extends HolidayEditableBaseFragment{
 
     public NewHolidayFragment() {}
 

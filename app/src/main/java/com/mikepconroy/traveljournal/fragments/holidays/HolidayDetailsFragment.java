@@ -120,9 +120,6 @@ public class HolidayDetailsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         Log.i(Configuration.TAG, "HolidayListFragment#onDetach: Detaching.");
-        if (mListener != null) {
-            mListener.onFragmentClose();
-        }
 
         mListener = null;
     }

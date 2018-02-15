@@ -101,6 +101,7 @@ public class PhotoListFragment extends Fragment {
 
         //TODO: Investigate whether this can be common code to remove the duplication across onResumes.
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+        fab.setVisibility(View.VISIBLE);
         fab.setImageResource(R.drawable.ic_add_white_24dp);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

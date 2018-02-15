@@ -5,6 +5,5 @@ package com.mikepconroy.traveljournal;
  */
 
 public interface OnFragmentUpdateListener  {
-    void onFragmentClose();
     void onFragmentOpened(String title, boolean navDrawerActive);
 }

@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -29,8 +30,8 @@ import com.mikepconroy.traveljournal.model.db.Holiday;
 public  class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         HolidayListFragment.HolidayListInteractionListener,
-        OnFragmentUpdateListener,
-        PhotoListFragment.OnPhotoListInteractionListener {
+        PhotoListFragment.OnPhotoListInteractionListener,
+        OnFragmentUpdateListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,8 @@ public  class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().getItem(0).setChecked(true);
+
     }
 
     private void setActionBarTitle(String title) {
@@ -82,16 +85,19 @@ public  class MainActivity extends AppCompatActivity
 
     private void disableNavDrawer(){
         Log.i(Configuration.TAG, "MainActivity: Disabling Nav Drawer");
+        DrawerLayout navDrawer = findViewById(R.id.drawer_layout);
+        navDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
+        ab.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
-        DrawerLayout navDrawer = findViewById(R.id.drawer_layout);
-        navDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
 
     @Override
@@ -136,13 +142,8 @@ public  class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-
-        //TODO: Disable drawer usability on add/edit fragments. Or keep it usable but confirm dialog.
-
-        //TODO: Change updateFragment() to not ALWAYS go to the back button.
 
         // Handle navigation view item clicks here.
         int id = item.getItemId();
@@ -180,6 +181,8 @@ public  class MainActivity extends AppCompatActivity
         return true;
     }
 
+
+    //TODO: Remove this and the onPhoto... as the fragment change can be handled from within the fragment.
     @Override
     public void onHolidayListItemInteraction(Holiday item) {
 
@@ -200,11 +203,6 @@ public  class MainActivity extends AppCompatActivity
         transaction.addToBackStack(null);
         // Commit the transaction
         transaction.commit();
-    }
-
-    public void onFragmentClose(){
-        Log.i(Configuration.TAG, "MainActivity: Fragment closed. Setting title to Holidays.");
-        //TODO: This section may not be required after the updates. Either way the correct title will need to be worked out.
     }
 
     public void onFragmentOpened(String title, boolean navDrawerActive){

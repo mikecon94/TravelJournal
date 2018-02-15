@@ -25,6 +25,7 @@ import com.mikepconroy.traveljournal.Configuration;
 import com.mikepconroy.traveljournal.OnFragmentUpdateListener;
 import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.fragments.DatePickerFragment;
+import com.mikepconroy.traveljournal.fragments.EditableBaseFragment;
 import com.mikepconroy.traveljournal.fragments.OnBackPressListener;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 
@@ -37,7 +38,7 @@ import java.util.Date;
  * Created by mikecon on 11/02/2018.
  */
 
-public abstract class HolidayBaseFragment extends Fragment implements OnBackPressListener {
+public abstract class HolidayEditableBaseFragment extends EditableBaseFragment implements OnBackPressListener {
 
     protected static final String DIALOG_DATE = "date";
     protected static final int REQUEST_START_DATE = 0;
@@ -52,8 +53,6 @@ public abstract class HolidayBaseFragment extends Fragment implements OnBackPres
 
     //If holidayId is -1 then we are inserting.
     protected int holidayId = -1;
-
-    protected OnFragmentUpdateListener mListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,7 +92,7 @@ public abstract class HolidayBaseFragment extends Fragment implements OnBackPres
                 try {
                     Date startDate = formatter.parse(startDateButton.getText().toString());
                     DatePickerFragment dialog = DatePickerFragment.newInstance(startDate);
-                    dialog.setTargetFragment(HolidayBaseFragment.this, REQUEST_START_DATE);
+                    dialog.setTargetFragment(HolidayEditableBaseFragment.this, REQUEST_START_DATE);
                     dialog.show(fm, DIALOG_DATE);
                 } catch (ParseException e){
                     e.printStackTrace();
@@ -110,7 +109,7 @@ public abstract class HolidayBaseFragment extends Fragment implements OnBackPres
                 try {
                     Date endDate = formatter.parse(endDateButton.getText().toString());
                     DatePickerFragment dialog = DatePickerFragment.newInstance(endDate);
-                    dialog.setTargetFragment(HolidayBaseFragment.this, REQUEST_END_DATE);
+                    dialog.setTargetFragment(HolidayEditableBaseFragment.this, REQUEST_END_DATE);
                     dialog.show(fm, DIALOG_DATE);
                 } catch (ParseException e){
                     e.printStackTrace();
@@ -124,7 +123,7 @@ public abstract class HolidayBaseFragment extends Fragment implements OnBackPres
             @Override
             public void onClick(View v){
                 Log.i(Configuration.TAG, "HolidayBaseFragment#onCreateView: Save Clicked.");
-                saveHoliday();
+                saveItem();
             }
         });
 
@@ -134,45 +133,21 @@ public abstract class HolidayBaseFragment extends Fragment implements OnBackPres
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        Log.i(Configuration.TAG, "HolidayBaseFragment#onAttach: Attaching.");
-        if (context instanceof OnFragmentUpdateListener) {
-            mListener = (OnFragmentUpdateListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement HolidayBaseFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Log.i(Configuration.TAG, "HolidayBaseFragment#onDetach: Detaching.");
-
-        if (mListener != null) {
-            mListener.onFragmentClose();
-        }
-
-        mListener = null;
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if(requestCode == REQUEST_START_DATE) {
                 Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
-                Log.i(Configuration.TAG, "NewHolidayFragment#onActivityResult: Setting start date: " + date.toString());
+                Log.i(Configuration.TAG, "HolidayEditableBaseFragment#onActivityResult: Setting start date: " + date.toString());
                 String startDate = formatter.format(date);
                 startDateButton.setText(startDate);
             } else if (requestCode == REQUEST_END_DATE){
                 Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
-                Log.i(Configuration.TAG, "NewHolidayFragment#onActivityResult: Setting end date: " + date.toString());
+                Log.i(Configuration.TAG, "HolidayEditableBaseFragment#onActivityResult: Setting end date: " + date.toString());
                 String endDate = formatter.format(date);
                 endDateButton.setText(endDate);
             } else if (requestCode == REQUEST_IMAGE){
                 //Update Image view.
-                Log.i(Configuration.TAG, "HolidayBase#onActivityResult: Image Received.");
+                Log.i(Configuration.TAG, "HolidayEditableBaseFragment#onActivityResult: Image Received.");
 
                 //TODO: Update this to store the image in a Photo Entity (?).
                 Uri uri = data.getData();
@@ -188,24 +163,7 @@ public abstract class HolidayBaseFragment extends Fragment implements OnBackPres
         }
     }
 
-    public void onBackPressed(){
-        Log.i(Configuration.TAG, "HolidayBaseFragment#onBackPressed");
-
-        new AlertDialog.Builder(getContext()).setTitle("Save changes?")
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        saveHoliday();
-                    }
-                }).setNegativeButton("Discard", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                getFragmentManager().popBackStack();
-            }
-        }).setCancelable(true).show();
-    }
-
-    protected void saveHoliday(){
+    protected void saveItem(){
         View view = getView();
         String name = ((EditText) view.findViewById(R.id.holiday_title)).getText().toString();
         String notes = ((EditText) view.findViewById(R.id.holiday_notes)).getText().toString();

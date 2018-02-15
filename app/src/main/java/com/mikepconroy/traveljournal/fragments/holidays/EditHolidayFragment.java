@@ -16,7 +16,7 @@ import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.model.db.AppDatabase;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 
-public class EditHolidayFragment extends HolidayBaseFragment {
+public class EditHolidayFragment extends HolidayEditableBaseFragment {
 
     public EditHolidayFragment() {}
 
@@ -33,8 +33,7 @@ public class EditHolidayFragment extends HolidayBaseFragment {
     public void onResume() {
         super.onResume();
         Log.i(Configuration.TAG, "EditHolidayFragment#onResume: Resuming.");
-        String title = getActivity().getResources().getString(R.string.edit_holiday_title);
-        mListener.onFragmentOpened(title, false);
+        mListener.onFragmentOpened("Edit Holiday", false);
         //getActivity().setTitle(title);
         //mListener.
     }
