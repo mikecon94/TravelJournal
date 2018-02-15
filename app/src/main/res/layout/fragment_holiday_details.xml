@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.mikepconroy.traveljournal.fragments.holidays.HolidayDetailsFragment">
+    tools:context="com.mikepconroy.traveljournal.fragments.holidays.HolidayDetailsFragment"
+    android:gravity="center">
 
     <ImageView
         android:layout_width="match_parent"
@@ -33,7 +34,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center">
+
         <TextView
             android:id="@+id/holiday_start_date_label"
             android:layout_width="wrap_content"
@@ -48,11 +51,12 @@
             android:text="@string/holiday_start_date" />
     </LinearLayout>
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/holiday_end_date_label"
@@ -68,5 +72,4 @@
             android:textSize="20sp"
             android:text="@string/holiday_end_date" />
     </LinearLayout>
-
 </LinearLayout>

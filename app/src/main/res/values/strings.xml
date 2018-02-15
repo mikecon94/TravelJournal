@@ -10,8 +10,8 @@
     <string name="holiday_start_date">01/01/2017</string>
     <string name="holiday_end_date">01/01/2018</string>
     <string name="holiday_notes">Holiday Notes</string>
-    <string name="holiday_start_date_label">Start Date:</string>
-    <string name="holiday_end_date_label">End Date:</string>
+    <string name="holiday_start_date_label">Start Date: </string>
+    <string name="holiday_end_date_label">End Date: </string>
     <string name="holiday_list_title">Holidays</string>
     <string name="holiday_details_title">Holiday Details</string>
     <string name="no_holiday_data_available">No holidays created yet</string>
@@ -21,4 +21,7 @@
     <string name="add_holiday_title">Add Holiday</string>
     <string name="date_picker_title">Date</string>
     <string name="edit_holiday_title">Edit Holiday</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

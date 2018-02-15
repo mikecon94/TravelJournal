@@ -105,16 +105,15 @@ public class PhotoListFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i(Configuration.TAG, "HolidayDetailsFragment: FAB Clicked.");
-                //Start the Edit Holiday Fragment.
-//                FragmentTransaction ft = getFragmentManager().beginTransaction();
-//                ft.replace(R.id.fragment_container, EditHolidayFragment.newInstance(holidayId));
-//                ft.addToBackStack(null);
-//                ft.commit();
+                Log.i(Configuration.TAG, "PhotoListFragment: FAB Clicked.");
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_container, new NewPhotoFragment());
+                ft.addToBackStack(null);
+                ft.commit();
 
                 //TODO: The following code can be used for undoing deletions etc.
-                Snackbar.make(view, "New Photo.", Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null).show();
+                //Snackbar.make(view, "New Photo.", Snackbar.LENGTH_SHORT)
+                //        .setAction("Action", null).show();
             }
         });
     }
