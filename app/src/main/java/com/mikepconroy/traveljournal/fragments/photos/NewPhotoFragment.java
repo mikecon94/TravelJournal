@@ -37,7 +37,9 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.mikepconroy.traveljournal.Configuration;
@@ -56,6 +58,8 @@ public class NewPhotoFragment extends EditableBaseFragment {
     private boolean mapCreated = false;
 
     private GoogleMap googleMap;
+    private Uri imageUri;
+    private LatLng photoLocation;
 
     public NewPhotoFragment() {}
 
@@ -135,7 +139,12 @@ public class NewPhotoFragment extends EditableBaseFragment {
                         Log.i(Configuration.TAG, "NewPhotoFragment: Map clicked. Launching PlacePicker.");
                         //TODO: Restrict the Place API Key to this app only.
                         if (isNetworkAvailable()) {
+
+                            VisibleRegion mapBounds = googleMap.getProjection().getVisibleRegion();
+
                             PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                            builder.setLatLngBounds(mapBounds.latLngBounds);
+
                             try {
                                 startActivityForResult(builder.build(getActivity()), REQUEST_PLACE);
                             } catch (GooglePlayServicesNotAvailableException | GooglePlayServicesRepairableException e) {
@@ -144,7 +153,7 @@ public class NewPhotoFragment extends EditableBaseFragment {
                             }
                         } else {
                             Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
-                        }                    }
+                    }}
                 });
 
                 NewPhotoFragment.this.googleMap = googleMap;
@@ -173,15 +182,20 @@ public class NewPhotoFragment extends EditableBaseFragment {
                 //TODO: The image resets on rotate.
                 //TODO: Update this to store the image in a Photo Entity (?).
                 Uri uri = data.getData();
-                Log.i(Configuration.TAG, "Image URI: " + uri.toString());
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
-                    ImageView imageView = getActivity().findViewById(R.id.holiday_image);
-                    imageView.setImageBitmap(bitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                this.imageUri = uri;
+                displayImage(uri);
             }
+        }
+    }
+
+    private void displayImage(Uri uri){
+        Log.i(Configuration.TAG, "Image URI: " + uri.toString());
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
+            ImageView imageView = getActivity().findViewById(R.id.holiday_image);
+            imageView.setImageBitmap(bitmap);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -191,6 +205,7 @@ public class NewPhotoFragment extends EditableBaseFragment {
         googleMap.addMarker(new MarkerOptions().position(location));
         CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(location, 17.0f);
         googleMap.animateCamera(camUpdate);
+        photoLocation = location;
     }
 
     @Override
