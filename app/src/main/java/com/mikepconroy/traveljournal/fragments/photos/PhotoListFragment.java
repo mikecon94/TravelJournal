@@ -30,9 +30,7 @@ import com.mikepconroy.traveljournal.fragments.photos.dummy.DummyContent.DummyIt
  */
 public class PhotoListFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 2;
     private OnPhotoListInteractionListener mListener;
 
@@ -43,7 +41,6 @@ public class PhotoListFragment extends Fragment {
     public PhotoListFragment() {
     }
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static PhotoListFragment newInstance(int columnCount) {
         PhotoListFragment fragment = new PhotoListFragment();
@@ -96,9 +93,6 @@ public class PhotoListFragment extends Fragment {
         super.onResume();
         mListener.onFragmentOpened("Photos", true);
 
-        //TODO: See whether the image height can be programmatically be set here.
-
-
         //TODO: Investigate whether this can be common code to remove the duplication across onResumes.
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
@@ -111,10 +105,6 @@ public class PhotoListFragment extends Fragment {
                 ft.replace(R.id.fragment_container, new NewPhotoFragment());
                 ft.addToBackStack(null);
                 ft.commit();
-
-                //TODO: The following code can be used for undoing deletions etc.
-                //Snackbar.make(view, "New Photo.", Snackbar.LENGTH_SHORT)
-                //        .setAction("Action", null).show();
             }
         });
     }

@@ -85,10 +85,6 @@ public class HolidayDetailsFragment extends Fragment {
                 ft.replace(R.id.fragment_container, EditHolidayFragment.newInstance(holidayId));
                 ft.addToBackStack(null);
                 ft.commit();
-
-                //TODO: The following code can be used for undoing deletions etc.
-                //Snackbar.make(view, "Editing Holiday.", Snackbar.LENGTH_SHORT)
-                //        .setAction("Action", null).show();
             }
         });
 

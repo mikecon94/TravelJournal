@@ -1,16 +1,12 @@
 package com.mikepconroy.traveljournal.fragments.holidays;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,14 +17,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.mikepconroy.traveljournal.Configuration;
-import com.mikepconroy.traveljournal.OnFragmentUpdateListener;
 import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.fragments.DatePickerFragment;
 import com.mikepconroy.traveljournal.fragments.EditableBaseFragment;
-import com.mikepconroy.traveljournal.fragments.OnBackPressListener;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 
 import java.io.IOException;
@@ -40,7 +32,7 @@ import java.util.Date;
  * Created by mikecon on 11/02/2018.
  */
 
-public abstract class HolidayEditableBaseFragment extends EditableBaseFragment implements OnBackPressListener {
+public abstract class HolidayEditableBaseFragment extends EditableBaseFragment {
 
     protected static final String DIALOG_DATE = "date";
     protected static final int REQUEST_START_DATE = 0;
@@ -151,6 +143,7 @@ public abstract class HolidayEditableBaseFragment extends EditableBaseFragment i
                 Log.i(Configuration.TAG, "HolidayEditableBaseFragment#onActivityResult: Image Received.");
 
                 //TODO: Update this to store the image in a Photo Entity (?).
+                //TODO: Change the photo chooser to choose from image list (with images unassociated or appropriate holiday/trip).
                 Uri uri = data.getData();
                 Log.i(Configuration.TAG, "Image URI: " + uri.toString());
                 try {

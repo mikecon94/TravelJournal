@@ -46,14 +46,8 @@ public class HolidayAndTripChooserActivity extends AppCompatActivity implements 
         adapter.addFragment(new HolidayListFragment(), "Places");
         viewPager.setAdapter(adapter);
 
-        final TabLayout tabLayout = findViewById(R.id.tabs);
-
-        tabLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                tabLayout.setupWithViewPager(viewPager);
-            }
-        });
+        TabLayout tabLayout = findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override

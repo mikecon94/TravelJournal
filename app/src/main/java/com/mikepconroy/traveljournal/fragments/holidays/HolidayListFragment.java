@@ -50,7 +50,6 @@ public class HolidayListFragment extends Fragment {
      */
     public HolidayListFragment() {}
 
-    // TODO: Customize parameter initialization
     public static HolidayListFragment newInstance(int columnCount) {
         Log.i(Configuration.TAG, "HolidayListFragment#newInstance: ??");
         HolidayListFragment fragment = new HolidayListFragment();
@@ -153,10 +152,6 @@ public class HolidayListFragment extends Fragment {
                     ft.replace(R.id.fragment_container, new NewHolidayFragment());
                     ft.addToBackStack(null);
                     ft.commit();
-
-                    //TODO: The following code can be used for undoing deletions etc.
-                    //Snackbar.make(view, "Editing Holiday.", Snackbar.LENGTH_SHORT)
-                    //        .setAction("Action", null).show();
                 }
             });
         }

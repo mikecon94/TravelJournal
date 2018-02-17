@@ -149,7 +149,6 @@ public class NewPhotoFragment extends EditableBaseFragment {
                     @Override
                     public void onMapClick(LatLng latLng) {
                         Log.i(Configuration.TAG, "NewPhotoFragment: Map clicked. Launching PlacePicker.");
-                        //TODO: Restrict the Place API Key to this app only.
                         if (isNetworkAvailable()) {
 
                             VisibleRegion mapBounds = googleMap.getProjection().getVisibleRegion();
@@ -184,7 +183,7 @@ public class NewPhotoFragment extends EditableBaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_PLACE) {
-                //TODO: Store place in database.
+                //TODO: Store place in database. Could use the current map centre to work out latlng.
                 Place place = PlacePicker.getPlace(getActivity(), data);
                 placeMarkerAndZoom(place.getLatLng());
             } else if (requestCode == REQUEST_IMAGE){
@@ -230,7 +229,6 @@ public class NewPhotoFragment extends EditableBaseFragment {
     }
 
     private void placeMarkerAndZoom(LatLng location){
-        //TODO: store this location as on rotate resets it.
         googleMap.clear();
         googleMap.addMarker(new MarkerOptions().position(location));
         CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(location, 17.0f);

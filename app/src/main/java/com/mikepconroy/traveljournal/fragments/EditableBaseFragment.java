@@ -13,7 +13,7 @@ import com.mikepconroy.traveljournal.OnFragmentUpdateListener;
  * Created by MICONROY on 15/02/2018.
  */
 
-public abstract class EditableBaseFragment extends Fragment {
+public abstract class EditableBaseFragment extends Fragment implements OnBackPressListener{
     protected OnFragmentUpdateListener mListener;
 
     @Override
@@ -38,7 +38,7 @@ public abstract class EditableBaseFragment extends Fragment {
 
 
     public void onBackPressed(){
-        Log.i(Configuration.TAG, "HolidayBaseFragment#onBackPressed");
+        Log.i(Configuration.TAG, "EditableBaseFragment#onBackPressed");
 
         new AlertDialog.Builder(getContext()).setTitle("Save changes?")
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
