@@ -1,6 +1,9 @@
 package com.mikepconroy.traveljournal.fragments.photos;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -40,12 +43,16 @@ public class NewPhotoFragment extends EditableBaseFragment {
             public void onClick(View view) {
                 Log.i(Configuration.TAG, "NewPhotoFragment: Location Button clicked. Launching PlacePicker.");
                 //TODO: Restrict the Place API Key to this app only.
-                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-                try {
-                    startActivityForResult(builder.build(getActivity()), REQUEST_PLACE);
-                } catch (GooglePlayServicesNotAvailableException | GooglePlayServicesRepairableException e){
-                    e.printStackTrace();
-                    Toast.makeText(getActivity(), "Location chooser unavailable.", Toast.LENGTH_SHORT).show();
+                if(isNetworkAvailable()) {
+                    PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                    try {
+                        startActivityForResult(builder.build(getActivity()), REQUEST_PLACE);
+                    } catch (GooglePlayServicesNotAvailableException | GooglePlayServicesRepairableException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getActivity(), "Location chooser unavailable.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -53,6 +60,13 @@ public class NewPhotoFragment extends EditableBaseFragment {
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
         return view;
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     @Override
