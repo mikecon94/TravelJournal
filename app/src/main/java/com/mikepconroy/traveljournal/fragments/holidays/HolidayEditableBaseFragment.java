@@ -21,6 +21,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.mikepconroy.traveljournal.Configuration;
 import com.mikepconroy.traveljournal.OnFragmentUpdateListener;
 import com.mikepconroy.traveljournal.R;
@@ -146,7 +148,6 @@ public abstract class HolidayEditableBaseFragment extends EditableBaseFragment i
                 String endDate = formatter.format(date);
                 endDateButton.setText(endDate);
             } else if (requestCode == REQUEST_IMAGE){
-                //Update Image view.
                 Log.i(Configuration.TAG, "HolidayEditableBaseFragment#onActivityResult: Image Received.");
 
                 //TODO: Update this to store the image in a Photo Entity (?).

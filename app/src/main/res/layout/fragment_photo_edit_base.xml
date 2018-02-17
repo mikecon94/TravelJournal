@@ -38,28 +38,38 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center">
-            <Button
-                    android:id="@+id/associate_image_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:text="Associate with trip" />
+                <Button
+                        android:id="@+id/associate_image_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:text="Associate with trip" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/location_enabled_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center">
-                <Button
-                    android:id="@+id/image_location_button"
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
-                    android:text="Location" />
+                    android:text="Choose Location?"/>
+
+                <CheckBox
+                    android:id="@+id/location_enabled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"/>
             </LinearLayout>
-
-
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/map_view"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_margin="5dp"/>
         </LinearLayout>
     </ScrollView>
 
