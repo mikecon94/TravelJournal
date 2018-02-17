@@ -138,23 +138,28 @@ public class HolidayListFragment extends Fragment {
         mListener.onFragmentOpened("Holidays", true);
 
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
-        fab.setVisibility(View.VISIBLE);
-        fab.setImageResource(R.drawable.ic_add_white_24dp);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i(Configuration.TAG, "HolidayListFragment: FAB Clicked.");
-                //Start the Edit Holiday Fragment.
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_container, new NewHolidayFragment());
-                ft.addToBackStack(null);
-                ft.commit();
 
-                //TODO: The following code can be used for undoing deletions etc.
-                //Snackbar.make(view, "Editing Holiday.", Snackbar.LENGTH_SHORT)
-                //        .setAction("Action", null).show();
-            }
-        });
+        //TODO See whether the FAB should be enabled on the chooser activity and allow the user to use it.
+        //The fab does not exist on the chooser activity.
+        if(fab != null) {
+            fab.setVisibility(View.VISIBLE);
+            fab.setImageResource(R.drawable.ic_add_white_24dp);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.i(Configuration.TAG, "HolidayListFragment: FAB Clicked.");
+                    //Start the Edit Holiday Fragment.
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.fragment_container, new NewHolidayFragment());
+                    ft.addToBackStack(null);
+                    ft.commit();
+
+                    //TODO: The following code can be used for undoing deletions etc.
+                    //Snackbar.make(view, "Editing Holiday.", Snackbar.LENGTH_SHORT)
+                    //        .setAction("Action", null).show();
+                }
+            });
+        }
     }
 
     @Override

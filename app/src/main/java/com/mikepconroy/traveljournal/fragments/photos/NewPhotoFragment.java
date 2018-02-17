@@ -54,12 +54,15 @@ public class NewPhotoFragment extends EditableBaseFragment {
 
     protected static final int REQUEST_PLACE = 0;
     protected static final int REQUEST_IMAGE = 1;
+    protected static final int REQUEST_HOLIDAY_TRIP = 2;
 
     private boolean mapCreated = false;
 
     private GoogleMap googleMap;
     private Uri imageUri;
     private LatLng photoLocation;
+    private int holidayId = -1;
+    private int tripId = -1;
 
     public NewPhotoFragment() {}
 
@@ -77,6 +80,15 @@ public class NewPhotoFragment extends EditableBaseFragment {
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_IMAGE);
+            }
+        });
+
+        Button chooseTripHolidayButton = view.findViewById(R.id.associate_image_button);
+        chooseTripHolidayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(), HolidayAndTripChooserActivity.class);
+                startActivityForResult(i, REQUEST_HOLIDAY_TRIP);
             }
         });
 
@@ -174,7 +186,6 @@ public class NewPhotoFragment extends EditableBaseFragment {
             if (requestCode == REQUEST_PLACE) {
                 //TODO: Store place in database.
                 Place place = PlacePicker.getPlace(getActivity(), data);
-                String toastMsg = String.format("Place: %s", place.getName());
                 placeMarkerAndZoom(place.getLatLng());
             } else if (requestCode == REQUEST_IMAGE){
                 Log.i(Configuration.TAG, "NewPhotoFragment#onActivityResult: Image Received.");
@@ -184,6 +195,25 @@ public class NewPhotoFragment extends EditableBaseFragment {
                 Uri uri = data.getData();
                 this.imageUri = uri;
                 displayImage(uri);
+            } else if (requestCode == REQUEST_HOLIDAY_TRIP) {
+                Log.i(Configuration.TAG, "NewPhotoFragment#onActivityResult: Holiday or Trip received.");
+                Toast.makeText(getContext(), "Holiday / Trip Chosen.", Toast.LENGTH_SHORT).show();
+                int id = (int) data.getExtras().get(Configuration.ITEM_ID);
+                String title = (String) data.getExtras().get(Configuration.ITEM_TITLE);
+                String type = (String) data.getExtras().get(Configuration.ITEM_TYPE);
+
+                Button associateButton = getActivity().findViewById(R.id.associate_image_button);
+
+                if(type.equals(Configuration.HOLIDAY_ITEM)){
+                    holidayId = id;
+                    tripId = -1;
+                    title = "Holiday: " + title;
+                } else if (type.equals(Configuration.TRIP_ITEM)){
+                    tripId = id;
+                    holidayId = -1;
+                    title = "Place: " + title;
+                }
+                associateButton.setText(title);
             }
         }
     }
