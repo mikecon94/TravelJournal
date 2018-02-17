@@ -21,6 +21,7 @@ import com.mikepconroy.traveljournal.model.db.Holiday;
 import java.util.ArrayList;
 import java.util.List;
 
+///TODO: Extract most of this to a base class. Subclasses would only edit the viewpager.
 public class HolidayAndTripChooserActivity extends AppCompatActivity implements HolidayListFragment.HolidayListInteractionListener {
 
     @Override
