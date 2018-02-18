@@ -25,6 +25,8 @@ public class Holiday {
 
     private String notes;
 
+    //TODO: Potentially have a field here for photo_id to store the holidays "profile pic".
+
     //TODO: Add a list of Place IDs as a foreign key (Places associated with this holiday).
 
     public int getId(){
