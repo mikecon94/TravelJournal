@@ -1,9 +1,9 @@
 package com.mikepconroy.traveljournal.fragments.photos;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,14 +13,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.mikepconroy.traveljournal.Configuration;
 import com.mikepconroy.traveljournal.OnFragmentUpdateListener;
 import com.mikepconroy.traveljournal.R;
-import com.mikepconroy.traveljournal.fragments.holidays.EditHolidayFragment;
 import com.mikepconroy.traveljournal.fragments.photos.dummy.DummyContent;
-import com.mikepconroy.traveljournal.fragments.photos.dummy.DummyContent.DummyItem;
+import com.mikepconroy.traveljournal.model.db.AppDatabase;
+import com.mikepconroy.traveljournal.model.db.Holiday;
+import com.mikepconroy.traveljournal.model.db.Photo;
+
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -63,19 +66,47 @@ public class PhotoListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_photo_list, container, false);
-
         RecyclerView recyclerView = view.findViewById(R.id.photo_list);
+        TextView emptyView = view.findViewById(R.id.empty_view);
+        TextView loadingView = view.findViewById(R.id.loading_photos_view);
+
+        recyclerView.setVisibility(View.GONE);
+        emptyView.setVisibility(View.GONE);
+        loadingView.setVisibility(View.VISIBLE);
 
         if (mColumnCount <= 1) {
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         } else {
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), mColumnCount));
         }
-        recyclerView.setAdapter(new PhotoRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+
+//        recyclerView.setAdapter(new PhotoRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+        new LoadPhotos().execute();
 
         return view;
     }
 
+    private void updatePhotoListView(List<Photo> photos){
+        Log.i(Configuration.TAG, "PhotoListFragment#updatePhotoListView: Updated Photos Received.");
+
+        RecyclerView recyclerView = getActivity().findViewById(R.id.photo_list);
+        TextView emptyView = getActivity().findViewById(R.id.empty_view);
+        TextView loadingView = getActivity().findViewById(R.id.loading_photos_view);
+        loadingView.setVisibility(View.GONE);
+
+        if(photos.isEmpty()){
+            Log.i(Configuration.TAG, "PhotoListFragment#onCreateView: No photos created" +
+                    " yet. Displaying message.");
+            emptyView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            Log.i(Configuration.TAG, "PhotoListFragment#onCreateView: Photos Exist." +
+                    "Displaying RecyclerView.");
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+            recyclerView.setAdapter(new PhotoRecyclerViewAdapter(photos, mListener));
+        }
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -95,18 +126,20 @@ public class PhotoListFragment extends Fragment {
 
         //TODO: Investigate whether this can be common code to remove the duplication across onResumes.
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
-        fab.setVisibility(View.VISIBLE);
-        fab.setImageResource(R.drawable.ic_add_white_24dp);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i(Configuration.TAG, "PhotoListFragment: FAB Clicked.");
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_container, new NewPhotoFragment());
-                ft.addToBackStack(null);
-                ft.commit();
-            }
-        });
+        if(fab != null) {
+            fab.setVisibility(View.VISIBLE);
+            fab.setImageResource(R.drawable.ic_add_white_24dp);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.i(Configuration.TAG, "PhotoListFragment: FAB Clicked.");
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.fragment_container, new NewPhotoFragment());
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }
+            });
+        }
     }
 
     @Override
@@ -115,18 +148,21 @@ public class PhotoListFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnPhotoListInteractionListener extends OnFragmentUpdateListener{
-        // TODO: Update argument type and name
-        void onPhotoListItemInteraction(DummyItem item);
+        void onPhotoListItemInteraction(Photo item);
+    }
+
+    private class LoadPhotos extends AsyncTask<Void, Void, List<Photo>> {
+        @Override
+        protected List<Photo> doInBackground(Void... params) {
+            Log.i(Configuration.TAG, "PhotoListFragment#doInBackground: Finding photos.");
+            return AppDatabase.getInstance(getContext()).photoDao().getAllPhotos();
+        }
+
+        @Override
+        protected void onPostExecute(List<Photo> photos) {
+            Log.i(Configuration.TAG, "PhotoListFragment: AsyncTask complete. No. of Photos: " + photos.size());
+            updatePhotoListView(photos);
+        }
     }
 }

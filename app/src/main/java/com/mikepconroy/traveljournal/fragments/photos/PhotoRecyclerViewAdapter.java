@@ -8,16 +8,18 @@ import android.widget.ImageView;
 
 import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.fragments.photos.PhotoListFragment.OnPhotoListInteractionListener;
-import com.mikepconroy.traveljournal.fragments.photos.dummy.DummyContent.DummyItem;
+import com.mikepconroy.traveljournal.model.db.Photo;
 
+import android.net.Uri;
+import java.net.URISyntaxException;
 import java.util.List;
 
 public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Photo> mValues;
     private final OnPhotoListInteractionListener mListener;
 
-    public PhotoRecyclerViewAdapter(List<DummyItem> items, OnPhotoListInteractionListener listener) {
+    public PhotoRecyclerViewAdapter(List<Photo> items, OnPhotoListInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -32,8 +34,9 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
+        holder.mImage.setImageURI(Uri.parse(holder.mItem.getImageUri()));
 
-        holder.mImage.setImageResource(R.drawable.photo_not_found);
+       // holder.mImage.setImageResource(R.drawable.photo_not_found);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +58,7 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final ImageView mImage;
-        public DummyItem mItem;
+        public Photo mItem;
 
         public ViewHolder(View view) {
             super(view);

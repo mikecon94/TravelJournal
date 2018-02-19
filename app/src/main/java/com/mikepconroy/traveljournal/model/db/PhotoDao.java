@@ -20,8 +20,8 @@ public interface PhotoDao {
     public void deletePhoto(Photo photo);
 
     @Query("SELECT * FROM Photo")
-    public List<Holiday> getAllPhotos();
+    public List<Photo> getAllPhotos();
 
     @Query("SELECT * FROM Photo WHERE id IS :id")
-    public Holiday findPhotoById(int id);
+    public Photo findPhotoById(int id);
 }

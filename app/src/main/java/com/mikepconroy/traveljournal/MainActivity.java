@@ -23,6 +23,7 @@ import com.mikepconroy.traveljournal.fragments.holidays.HolidayListFragment;
 import com.mikepconroy.traveljournal.fragments.photos.PhotoListFragment;
 import com.mikepconroy.traveljournal.fragments.photos.dummy.DummyContent;
 import com.mikepconroy.traveljournal.model.db.Holiday;
+import com.mikepconroy.traveljournal.model.db.Photo;
 
 public  class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -205,7 +206,7 @@ public  class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPhotoListItemInteraction(DummyContent.DummyItem item) {
+    public void onPhotoListItemInteraction(Photo item) {
         //TODO: Open fragment for editing a photo.
     }
 }

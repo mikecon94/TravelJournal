@@ -5,12 +5,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.ParseException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,24 +21,17 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceDetectionClient;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.VisibleRegion;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.mikepconroy.traveljournal.Configuration;
 import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.fragments.EditableBaseFragment;
@@ -72,7 +62,7 @@ public class NewPhotoFragment extends EditableBaseFragment {
         Log.i(Configuration.TAG, "NewPhotoFragment#onCreateView: Creating View.");
         final View view = inflater.inflate(R.layout.fragment_photo_edit_base, container, false);
 
-        ImageView image = view.findViewById(R.id.holiday_image);
+        ImageView image = view.findViewById(R.id.photo_image);
         image.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -221,7 +211,7 @@ public class NewPhotoFragment extends EditableBaseFragment {
         Log.i(Configuration.TAG, "Image URI: " + uri.toString());
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
-            ImageView imageView = getActivity().findViewById(R.id.holiday_image);
+            ImageView imageView = getActivity().findViewById(R.id.photo_image);
             imageView.setImageBitmap(bitmap);
         } catch (IOException e) {
             e.printStackTrace();
