@@ -87,6 +87,7 @@ public class PhotoListFragment extends Fragment {
     private void updatePhotoListView(List<Photo> photos){
         Log.i(Configuration.TAG, "PhotoListFragment#updatePhotoListView: Updated Photos Received.");
 
+        //TODO: Fix permissions so the list view can load the images. Or store the image in the DB as a blob or base64 etc.
         RecyclerView recyclerView = getActivity().findViewById(R.id.photo_list);
         TextView emptyView = getActivity().findViewById(R.id.empty_view);
         TextView loadingView = getActivity().findViewById(R.id.loading_photos_view);
