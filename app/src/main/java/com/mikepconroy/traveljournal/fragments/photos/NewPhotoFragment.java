@@ -209,13 +209,8 @@ public class NewPhotoFragment extends EditableBaseFragment {
 
     private void displayImage(Uri uri){
         Log.i(Configuration.TAG, "Image URI: " + uri.toString());
-        try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
-            ImageView imageView = getActivity().findViewById(R.id.photo_image);
-            imageView.setImageBitmap(bitmap);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ImageView imageView = getActivity().findViewById(R.id.photo_image);
+        imageView.setImageURI(uri);
     }
 
     private void placeMarkerAndZoom(LatLng location){
