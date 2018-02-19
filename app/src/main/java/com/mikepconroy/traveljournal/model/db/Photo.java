@@ -76,4 +76,9 @@ public class Photo {
         this.longitude = longitude;
     }
 
+    public String toString(){
+        return "ID: " + id + "; Uri: " + imageUri.toString() + "; tags: " + tags + "; HolidayID: "
+                + holidayId + "; PlaceID: " + placeId + "LatLng: " + latitude + ", " + longitude;
+    }
+
 }

@@ -32,5 +32,3 @@ public class NewHolidayFragment extends HolidayEditableBaseFragment{
         }
     }
 }
-
-

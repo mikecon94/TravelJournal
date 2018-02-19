@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -33,6 +36,9 @@ import com.google.android.gms.maps.model.VisibleRegion;
 import com.mikepconroy.traveljournal.Configuration;
 import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.fragments.EditableBaseFragment;
+import com.mikepconroy.traveljournal.model.db.AppDatabase;
+import com.mikepconroy.traveljournal.model.db.Holiday;
+import com.mikepconroy.traveljournal.model.db.Photo;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -45,8 +51,9 @@ public class NewPhotoFragment extends EditableBaseFragment {
     private boolean mapCreated = false;
 
     private GoogleMap googleMap;
+
+    //We need to track these when they are set as the views do not store them.
     private Uri imageUri;
-    private LatLng photoLocation;
     private int holidayId = -1;
     private int tripId = -1;
 
@@ -110,6 +117,15 @@ public class NewPhotoFragment extends EditableBaseFragment {
 
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
+
+        Button saveItemButton = view.findViewById(R.id.save_image_button);
+        saveItemButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                saveItem();
+            }
+        });
+
         return view;
     }
 
@@ -214,7 +230,6 @@ public class NewPhotoFragment extends EditableBaseFragment {
         googleMap.addMarker(new MarkerOptions().position(location));
         CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(location, 17.0f);
         googleMap.animateCamera(camUpdate);
-        photoLocation = location;
     }
 
     @Override
@@ -225,6 +240,44 @@ public class NewPhotoFragment extends EditableBaseFragment {
 
     @Override
     protected void saveItem() {
-        //TODO: Implement this method.
+        View view = getView();
+        if(imageUri == null) {
+            Toast.makeText(getContext(), "Please choose a photo.", Toast.LENGTH_SHORT).show();
+
+        } else {
+            String uri = imageUri.toString();
+
+            String tags = ((EditText) view.findViewById(R.id.image_tags)).getText().toString();
+            CheckBox addLocation = view.findViewById(R.id.location_enabled);
+
+            Photo photo = new Photo();
+            photo.setImageUri(uri);
+            photo.setTags(tags);
+            if (holidayId != -1) {
+                photo.setHolidayId(holidayId);
+            } else if (tripId != -1) {
+                photo.setPlaceId(tripId);
+            }
+
+            if (addLocation.isChecked()) {
+                LatLng location = googleMap.getCameraPosition().target;
+                photo.setLatitude(location.latitude);
+                photo.setLongitude(location.longitude);
+            }
+
+            Log.i(Configuration.TAG, "NewPhotoFragment#saveItem: Saving Photo: " + photo.toString());
+            new InsertPhotoTask().execute(photo);
+
+            Toast.makeText(getContext(), "Photo Saved!", Toast.LENGTH_SHORT).show();
+            getFragmentManager().popBackStack();
+        }
+    }
+
+    private class InsertPhotoTask extends AsyncTask<Photo, Void, Void> {
+        @Override
+        protected Void doInBackground(Photo... photos) {
+            AppDatabase.getInstance(getContext()).photoDao().insertPhoto(photos[0]);
+            return null;
+        }
     }
 }
