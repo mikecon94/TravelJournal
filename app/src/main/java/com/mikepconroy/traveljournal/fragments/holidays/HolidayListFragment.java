@@ -18,8 +18,8 @@ import android.widget.TextView;
 import com.mikepconroy.traveljournal.Configuration;
 import com.mikepconroy.traveljournal.OnFragmentUpdateListener;
 import com.mikepconroy.traveljournal.R;
-import com.mikepconroy.traveljournal.model.db.Holiday;
 import com.mikepconroy.traveljournal.model.db.AppDatabase;
+import com.mikepconroy.traveljournal.model.db.Holiday;
 
 import java.util.List;
 

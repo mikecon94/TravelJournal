@@ -1,5 +1,6 @@
 package com.mikepconroy.traveljournal.fragments.photos;
 
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +11,6 @@ import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.fragments.photos.PhotoListFragment.OnPhotoListInteractionListener;
 import com.mikepconroy.traveljournal.model.db.Photo;
 
-import android.net.Uri;
-import java.net.URISyntaxException;
 import java.util.List;
 
 public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecyclerViewAdapter.ViewHolder> {

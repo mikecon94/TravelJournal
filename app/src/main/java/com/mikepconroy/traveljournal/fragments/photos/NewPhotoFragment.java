@@ -2,12 +2,10 @@ package com.mikepconroy.traveljournal.fragments.photos;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,8 +33,6 @@ import com.google.android.gms.maps.model.VisibleRegion;
 import com.mikepconroy.traveljournal.Configuration;
 import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.fragments.EditableBaseFragment;
-
-import java.io.IOException;
 
 import static android.app.Activity.RESULT_OK;
 

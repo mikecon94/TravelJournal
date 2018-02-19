@@ -18,9 +18,7 @@ import android.widget.TextView;
 import com.mikepconroy.traveljournal.Configuration;
 import com.mikepconroy.traveljournal.OnFragmentUpdateListener;
 import com.mikepconroy.traveljournal.R;
-import com.mikepconroy.traveljournal.fragments.photos.dummy.DummyContent;
 import com.mikepconroy.traveljournal.model.db.AppDatabase;
-import com.mikepconroy.traveljournal.model.db.Holiday;
 import com.mikepconroy.traveljournal.model.db.Photo;
 
 import java.util.List;

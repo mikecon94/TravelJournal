@@ -16,8 +16,8 @@ import android.widget.Toast;
 import com.mikepconroy.traveljournal.Configuration;
 import com.mikepconroy.traveljournal.OnFragmentUpdateListener;
 import com.mikepconroy.traveljournal.R;
-import com.mikepconroy.traveljournal.model.db.Holiday;
 import com.mikepconroy.traveljournal.model.db.AppDatabase;
+import com.mikepconroy.traveljournal.model.db.Holiday;
 
 /**
  * A simple {@link Fragment} subclass.
