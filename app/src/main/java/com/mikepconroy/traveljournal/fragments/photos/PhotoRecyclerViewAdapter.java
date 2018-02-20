@@ -33,7 +33,7 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mImage.setImageURI(Uri.parse(holder.mItem.getImageUri()));
+        holder.mImage.setImageURI(Uri.parse(holder.mItem.getImagePath()));
 
        // holder.mImage.setImageResource(R.drawable.photo_not_found);
 

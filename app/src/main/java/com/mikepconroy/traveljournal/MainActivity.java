@@ -142,12 +142,12 @@ public  class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_holidays) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Holidays clicked.");
-            updateFragment(new HolidayListFragment());
+            updateFragment(new HolidayListFragment(), false);
         } else if (id == R.id.nav_places) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Places clicked.");
         } else if (id == R.id.nav_photos) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Photos clicked.");
-            updateFragment(new PhotoListFragment());
+            updateFragment(new PhotoListFragment(), false);
         } else if (id == R.id.nav_travel_galleries) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Travel Gallery clicked.");
         } else if (id == R.id.nav_camera) {
@@ -180,17 +180,18 @@ public  class MainActivity extends AppCompatActivity
             "Opening HolidayDetailsFragment with item: " + item.getId());
         //Toast.makeText(this, "You clicked " + item.toString(), Toast.LENGTH_SHORT).show();
         HolidayDetailsFragment holidayFragment = HolidayDetailsFragment.newInstance(item.getId());
-        updateFragment(holidayFragment);
-
+        updateFragment(holidayFragment, true);
     }
 
-    private void updateFragment(Fragment fragment){
+    private void updateFragment(Fragment fragment, boolean addToBackStack){
         FragmentTransaction transaction =
                 getSupportFragmentManager().beginTransaction();
         // Replace whatever is in the fragment_container view with this fragment,
         // and add the transaction to the back stack so the user can navigate back
         transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
+        if(addToBackStack){
+            transaction.addToBackStack(null);
+        }
         // Commit the transaction
         transaction.commit();
     }

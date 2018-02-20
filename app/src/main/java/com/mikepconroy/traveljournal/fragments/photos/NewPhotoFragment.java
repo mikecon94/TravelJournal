@@ -1,13 +1,15 @@
 package com.mikepconroy.traveljournal.fragments.photos;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,8 +39,12 @@ import com.mikepconroy.traveljournal.Configuration;
 import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.fragments.EditableBaseFragment;
 import com.mikepconroy.traveljournal.model.db.AppDatabase;
-import com.mikepconroy.traveljournal.model.db.Holiday;
 import com.mikepconroy.traveljournal.model.db.Photo;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -53,7 +59,7 @@ public class NewPhotoFragment extends EditableBaseFragment {
     private GoogleMap googleMap;
 
     //We need to track these when they are set as the views do not store them.
-    private Uri imageUri;
+    private String imagePath;
     private int holidayId = -1;
     private int tripId = -1;
 
@@ -194,7 +200,6 @@ public class NewPhotoFragment extends EditableBaseFragment {
                 //TODO: The image resets on rotate.
                 //TODO: Update this to store the image in a Photo Entity (?).
                 Uri uri = data.getData();
-                this.imageUri = uri;
                 displayImage(uri);
             } else if (requestCode == REQUEST_HOLIDAY_TRIP) {
                 Log.i(Configuration.TAG, "NewPhotoFragment#onActivityResult: Holiday or Trip received.");
@@ -223,6 +228,12 @@ public class NewPhotoFragment extends EditableBaseFragment {
         Log.i(Configuration.TAG, "Image URI: " + uri.toString());
         ImageView imageView = getActivity().findViewById(R.id.photo_image);
         imageView.setImageURI(uri);
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
+            imagePath = saveImage(bitmap, UUID.randomUUID().toString());
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     private void placeMarkerAndZoom(LatLng location){
@@ -241,17 +252,15 @@ public class NewPhotoFragment extends EditableBaseFragment {
     @Override
     protected void saveItem() {
         View view = getView();
-        if(imageUri == null) {
+        if(imagePath == null) {
             Toast.makeText(getContext(), "Please choose a photo.", Toast.LENGTH_SHORT).show();
-
         } else {
-            String uri = imageUri.toString();
 
             String tags = ((EditText) view.findViewById(R.id.image_tags)).getText().toString();
             CheckBox addLocation = view.findViewById(R.id.location_enabled);
 
             Photo photo = new Photo();
-            photo.setImageUri(uri);
+            photo.setImagePath(imagePath);
             photo.setTags(tags);
             if (holidayId != -1) {
                 photo.setHolidayId(holidayId);
@@ -271,6 +280,28 @@ public class NewPhotoFragment extends EditableBaseFragment {
             Toast.makeText(getContext(), "Photo Saved!", Toast.LENGTH_SHORT).show();
             getFragmentManager().popBackStack();
         }
+    }
+
+
+    //Takes a filename so when we edit photos users can overwrite current ones.
+    private String saveImage(Bitmap image, String fileName){
+        ContextWrapper contextWrapper = new ContextWrapper(getContext());
+        File directory = contextWrapper.getDir("images", Context.MODE_PRIVATE);
+        File file = new File(directory, fileName);
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+            image.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        return directory.getAbsolutePath() + "/" + fileName;
     }
 
     private class InsertPhotoTask extends AsyncTask<Photo, Void, Void> {

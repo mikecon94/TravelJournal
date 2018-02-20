@@ -10,7 +10,7 @@ public class Photo {
     @PrimaryKey(autoGenerate = true)
     private int id;
     @ColumnInfo(name = "image_uri")
-    private String imageUri;
+    private String imagePath;
     private String tags;
     @ColumnInfo(name = "holiday_id")
     private int holidayId;
@@ -28,12 +28,12 @@ public class Photo {
         this.id = id;
     }
 
-    public String getImageUri() {
-        return imageUri;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setImageUri(String imageUri) {
-        this.imageUri = imageUri;
+    public void setImagePath(String imageUri) {
+        this.imagePath = imageUri;
     }
 
     public String getTags() {
@@ -77,7 +77,7 @@ public class Photo {
     }
 
     public String toString(){
-        return "ID: " + id + "; Uri: " + imageUri.toString() + "; tags: " + tags + "; HolidayID: "
+        return "ID: " + id + "; Uri: " + imagePath + "; tags: " + tags + "; HolidayID: "
                 + holidayId + "; PlaceID: " + placeId + "LatLng: " + latitude + ", " + longitude;
     }
 
