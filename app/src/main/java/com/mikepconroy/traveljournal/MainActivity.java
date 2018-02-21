@@ -20,6 +20,7 @@ import android.view.View;
 import com.mikepconroy.traveljournal.fragments.OnBackPressListener;
 import com.mikepconroy.traveljournal.fragments.holidays.HolidayDetailsFragment;
 import com.mikepconroy.traveljournal.fragments.holidays.HolidayListFragment;
+import com.mikepconroy.traveljournal.fragments.photos.PhotoDetailsFragment;
 import com.mikepconroy.traveljournal.fragments.photos.PhotoListFragment;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 import com.mikepconroy.traveljournal.model.db.Photo;
@@ -173,16 +174,6 @@ public  class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public void onHolidayListItemInteraction(Holiday item) {
-
-        Log.i(Configuration.TAG, "MainActivity#OnListFragmentInteractions:" +
-            "Opening HolidayDetailsFragment with item: " + item.getId());
-        //Toast.makeText(this, "You clicked " + item.toString(), Toast.LENGTH_SHORT).show();
-        HolidayDetailsFragment holidayFragment = HolidayDetailsFragment.newInstance(item.getId());
-        updateFragment(holidayFragment, true);
-    }
-
     private void updateFragment(Fragment fragment, boolean addToBackStack){
         FragmentTransaction transaction =
                 getSupportFragmentManager().beginTransaction();
@@ -206,7 +197,21 @@ public  class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onHolidayListItemInteraction(Holiday item) {
+
+        Log.i(Configuration.TAG, "MainActivity#OnListFragmentInteractions:" +
+                "Opening HolidayDetailsFragment with item: " + item.getId());
+        //Toast.makeText(this, "You clicked " + item.toString(), Toast.LENGTH_SHORT).show();
+        HolidayDetailsFragment holidayFragment = HolidayDetailsFragment.newInstance(item.getId());
+        updateFragment(holidayFragment, true);
+    }
+
+    @Override
     public void onPhotoListItemInteraction(Photo item) {
         //TODO: Open fragment for editing a photo.
+        Log.i(Configuration.TAG, "MainActivity#OnPhotoListInteraction: Opening PhotoDetails with ID: " + item.getId());
+        Log.d(Configuration.TAG, "Photo: " + item.toString());
+        PhotoDetailsFragment photoDetailsFragment = PhotoDetailsFragment.newInstance(item.getId());
+        updateFragment(photoDetailsFragment, true);
     }
 }

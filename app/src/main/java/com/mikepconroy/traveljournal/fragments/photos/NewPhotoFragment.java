@@ -191,7 +191,6 @@ public class NewPhotoFragment extends EditableBaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_PLACE) {
-                //TODO: Store place in database. Could use the current map centre to work out latlng.
                 Place place = PlacePicker.getPlace(getActivity(), data);
                 placeMarkerAndZoom(place.getLatLng());
             } else if (requestCode == REQUEST_IMAGE){

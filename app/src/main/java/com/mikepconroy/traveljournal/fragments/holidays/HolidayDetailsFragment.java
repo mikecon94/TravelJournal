@@ -37,13 +37,6 @@ public class HolidayDetailsFragment extends Fragment {
 
     public HolidayDetailsFragment() {}
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param holidayId The ID of the holiday to display details of.
-     * @return A new instance of fragment HolidayDetailsFragment.
-     */
     public static HolidayDetailsFragment newInstance(int holidayId) {
         Log.i(Configuration.TAG, "HolidayDetailsFragment#newInstance: Creating new instance.");
         HolidayDetailsFragment fragment = new HolidayDetailsFragment();
@@ -56,17 +49,20 @@ public class HolidayDetailsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(Configuration.TAG, "HolidayListFragment#onCreate: Creating.");
+        Log.i(Configuration.TAG, "HolidayDetailsFragment#onCreate: Creating.");
         if (getArguments() != null) {
             holidayId = getArguments().getInt(HOLIDAY_ID);
-            Log.i(Configuration.TAG, "HolidayListFragment#onCreate: Holiday ID: " + holidayId);
+            Log.i(Configuration.TAG, "HolidayDetailsFragment#onCreate: Holiday ID: " + holidayId);
+        } else {
+            Log.e(Configuration.TAG, "Holiday Details Fragment opened without Holiday ID.");
+            getFragmentManager().popBackStack();
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i(Configuration.TAG, "HolidayListFragment#onCreateView: Creating View.");
+        Log.i(Configuration.TAG, "HolidayDetailsFragment#onCreateView: Creating View.");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_holiday_details, container, false);
         //View view = inflater.inflate(R.layout.fragment_edit_holiday_details, container, false);

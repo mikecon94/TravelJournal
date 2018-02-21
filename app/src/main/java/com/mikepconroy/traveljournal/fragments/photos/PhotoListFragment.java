@@ -78,7 +78,6 @@ public class PhotoListFragment extends Fragment {
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), mColumnCount));
         }
 
-//        recyclerView.setAdapter(new PhotoRecyclerViewAdapter(DummyContent.ITEMS, mListener));
         new LoadPhotos().execute();
 
         return view;
