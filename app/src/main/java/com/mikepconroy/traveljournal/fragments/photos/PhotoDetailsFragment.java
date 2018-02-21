@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -111,7 +112,20 @@ public class PhotoDetailsFragment extends Fragment {
                 tags.setVisibility(View.GONE);
             }
 
-            //TODO Load Holiday/Place Name.
+            Button viewAssociatedTrip = getView().findViewById(R.id.view_associated_trip);
+            if(photo.getHolidayId() != 0){
+                Log.i(Configuration.TAG, "PhotoDetailsFragment: Photo is associated with a holiday: " + photo.getHolidayId());
+                viewAssociatedTrip.setText("Loading Associated Holiday");
+                new LoadHoliday().execute(photo.getHolidayId());
+            } else if (photo.getPlaceId() != 0){
+                Log.i(Configuration.TAG, "PhotoDetailsFragment: Photo is associated with a place." + photo.getPlaceId());
+                viewAssociatedTrip.setText("Loading Associated Place");
+                //TODO Load Place.
+            } else {
+                //TODO Maybe remove the button if there is no associated trip.
+                viewAssociatedTrip.setText("No associated trip");
+                viewAssociatedTrip.setClickable(false);
+            }
 
             if(photo.getLatitude() != 0 && photo.getLongitude() != 0) {
                 Log.i(Configuration.TAG, "PhotoDetailsFragment: Displaying MapView.");
@@ -123,6 +137,21 @@ public class PhotoDetailsFragment extends Fragment {
             }
         }
 
+    }
+
+    private void updateAssociatedTripButton(final Holiday holiday){
+        Button viewAssociatedTrip = getView().findViewById(R.id.view_associated_trip);
+        viewAssociatedTrip.setText("View Holiday: " + holiday.getTitle());
+        viewAssociatedTrip.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Log.i(Configuration.TAG, "PhotoDetailsFragment: Opening Holiday Details Fragment with ID: " + holiday.getId());
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_container, HolidayDetailsFragment.newInstance(holiday.getId()));
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
     }
 
     private void createMap(View view, final LatLng location){
@@ -172,6 +201,19 @@ public class PhotoDetailsFragment extends Fragment {
         @Override
         protected void onPostExecute(Photo photo) {
             updatePhotoDetailsDisplay(photo);
+        }
+    }
+
+    private class LoadHoliday extends AsyncTask<Integer, Void, Holiday> {
+        @Override
+        protected Holiday doInBackground(Integer... holidayId) {
+            Log.i(Configuration.TAG, "PhotoDetailsFragment#doInBackground: Finding holiday with ID: " + holidayId[0]);
+            return AppDatabase.getInstance(getContext()).holidayDao().findHolidayById(holidayId[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Holiday holiday) {
+            updateAssociatedTripButton(holiday);
         }
     }
 }
