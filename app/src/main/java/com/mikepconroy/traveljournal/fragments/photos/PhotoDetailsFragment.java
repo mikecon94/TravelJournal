@@ -106,10 +106,13 @@ public class PhotoDetailsFragment extends Fragment {
             imageView.setImageURI(Uri.parse(photo.getImagePath()));
 
             TextView tags = getActivity().findViewById(R.id.image_tags);
-            if(photo.getTags() != null) {
+            if(!photo.getTags().equals("")) {
+                Log.i(Configuration.TAG, "PhotoDetailsFragment: Tags on photo.");
                 tags.setText(photo.getTags());
             } else {
-                tags.setVisibility(View.GONE);
+                Log.i(Configuration.TAG, "PhotoDetailsFragment: No tags on photo.");
+                tags.setTextColor(getResources().getColor(R.color.noTagsMessage));
+                tags.setHint("No tags set.");
             }
 
             Button viewAssociatedTrip = getView().findViewById(R.id.view_associated_trip);
