@@ -14,16 +14,14 @@ public class Holiday {
 
     @PrimaryKey (autoGenerate = true)
     private int id;
-
     private String title;
-
     @ColumnInfo(name = "start_date")
     private String startDate;
-
     @ColumnInfo(name = "end_date")
     private String endDate;
-
     private String notes;
+
+    //TODO: Potentially have a field here for photo_id to store the holidays "profile pic".
 
     //TODO: Add a list of Place IDs as a foreign key (Places associated with this holiday).
 

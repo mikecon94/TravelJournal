@@ -169,6 +169,8 @@ public abstract class HolidayEditableBaseFragment extends EditableBaseFragment {
             Toast.makeText(getContext(), "Please enter a holiday name.", Toast.LENGTH_SHORT).show();
         } else {
             Holiday holiday = new Holiday();
+
+            //HolidayId is -1 then we are creating a new holiday otherwise updating one.
             if(holidayId != -1) {
                 holiday.setId(holidayId);
             }

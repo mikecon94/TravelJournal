@@ -36,7 +36,6 @@ public abstract class EditableBaseFragment extends Fragment implements OnBackPre
         mListener = null;
     }
 
-
     public void onBackPressed(){
         Log.i(Configuration.TAG, "EditableBaseFragment#onBackPressed");
 

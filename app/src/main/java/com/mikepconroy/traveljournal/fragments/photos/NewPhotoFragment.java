@@ -1,16 +1,15 @@
 package com.mikepconroy.traveljournal.fragments.photos;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.ParseException;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,35 +17,34 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceDetectionClient;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.VisibleRegion;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.mikepconroy.traveljournal.Configuration;
 import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.fragments.EditableBaseFragment;
+import com.mikepconroy.traveljournal.model.db.AppDatabase;
+import com.mikepconroy.traveljournal.model.db.Photo;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -59,8 +57,9 @@ public class NewPhotoFragment extends EditableBaseFragment {
     private boolean mapCreated = false;
 
     private GoogleMap googleMap;
-    private Uri imageUri;
-    private LatLng photoLocation;
+
+    //We need to track these when they are set as the views do not store them.
+    private String imagePath;
     private int holidayId = -1;
     private int tripId = -1;
 
@@ -72,7 +71,7 @@ public class NewPhotoFragment extends EditableBaseFragment {
         Log.i(Configuration.TAG, "NewPhotoFragment#onCreateView: Creating View.");
         final View view = inflater.inflate(R.layout.fragment_photo_edit_base, container, false);
 
-        ImageView image = view.findViewById(R.id.holiday_image);
+        ImageView image = view.findViewById(R.id.photo_image);
         image.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -124,6 +123,15 @@ public class NewPhotoFragment extends EditableBaseFragment {
 
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
+
+        Button saveItemButton = view.findViewById(R.id.save_image_button);
+        saveItemButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                saveItem();
+            }
+        });
+
         return view;
     }
 
@@ -183,7 +191,6 @@ public class NewPhotoFragment extends EditableBaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_PLACE) {
-                //TODO: Store place in database. Could use the current map centre to work out latlng.
                 Place place = PlacePicker.getPlace(getActivity(), data);
                 placeMarkerAndZoom(place.getLatLng());
             } else if (requestCode == REQUEST_IMAGE){
@@ -192,7 +199,6 @@ public class NewPhotoFragment extends EditableBaseFragment {
                 //TODO: The image resets on rotate.
                 //TODO: Update this to store the image in a Photo Entity (?).
                 Uri uri = data.getData();
-                this.imageUri = uri;
                 displayImage(uri);
             } else if (requestCode == REQUEST_HOLIDAY_TRIP) {
                 Log.i(Configuration.TAG, "NewPhotoFragment#onActivityResult: Holiday or Trip received.");
@@ -219,11 +225,12 @@ public class NewPhotoFragment extends EditableBaseFragment {
 
     private void displayImage(Uri uri){
         Log.i(Configuration.TAG, "Image URI: " + uri.toString());
+        ImageView imageView = getActivity().findViewById(R.id.photo_image);
+        imageView.setImageURI(uri);
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
-            ImageView imageView = getActivity().findViewById(R.id.holiday_image);
-            imageView.setImageBitmap(bitmap);
-        } catch (IOException e) {
+            imagePath = saveImage(bitmap, UUID.randomUUID().toString());
+        } catch (IOException e){
             e.printStackTrace();
         }
     }
@@ -233,7 +240,6 @@ public class NewPhotoFragment extends EditableBaseFragment {
         googleMap.addMarker(new MarkerOptions().position(location));
         CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(location, 17.0f);
         googleMap.animateCamera(camUpdate);
-        photoLocation = location;
     }
 
     @Override
@@ -244,6 +250,64 @@ public class NewPhotoFragment extends EditableBaseFragment {
 
     @Override
     protected void saveItem() {
-        //TODO: Implement this method.
+        View view = getView();
+        if(imagePath == null) {
+            Toast.makeText(getContext(), "Please choose a photo.", Toast.LENGTH_SHORT).show();
+        } else {
+
+            String tags = ((EditText) view.findViewById(R.id.image_tags)).getText().toString();
+            CheckBox addLocation = view.findViewById(R.id.location_enabled);
+
+            Photo photo = new Photo();
+            photo.setImagePath(imagePath);
+            photo.setTags(tags);
+            if (holidayId != -1) {
+                photo.setHolidayId(holidayId);
+            } else if (tripId != -1) {
+                photo.setPlaceId(tripId);
+            }
+
+            if (addLocation.isChecked()) {
+                LatLng location = googleMap.getCameraPosition().target;
+                photo.setLatitude(location.latitude);
+                photo.setLongitude(location.longitude);
+            }
+
+            Log.i(Configuration.TAG, "NewPhotoFragment#saveItem: Saving Photo: " + photo.toString());
+            new InsertPhotoTask().execute(photo);
+
+            Toast.makeText(getContext(), "Photo Saved!", Toast.LENGTH_SHORT).show();
+            getFragmentManager().popBackStack();
+        }
+    }
+
+
+    //Takes a filename so when we edit photos users can overwrite current ones.
+    private String saveImage(Bitmap image, String fileName){
+        ContextWrapper contextWrapper = new ContextWrapper(getContext());
+        File directory = contextWrapper.getDir("images", Context.MODE_PRIVATE);
+        File file = new File(directory, fileName);
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+            image.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        return directory.getAbsolutePath() + "/" + fileName;
+    }
+
+    private class InsertPhotoTask extends AsyncTask<Photo, Void, Void> {
+        @Override
+        protected Void doInBackground(Photo... photos) {
+            AppDatabase.getInstance(getContext()).photoDao().insertPhoto(photos[0]);
+            return null;
+        }
     }
 }

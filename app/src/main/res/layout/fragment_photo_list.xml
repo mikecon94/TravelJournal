@@ -21,7 +21,7 @@
         android:text="@string/no_photo_data_available" />
 
     <TextView
-        android:id="@+id/loading_holidays_view"
+        android:id="@+id/loading_photos_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"

@@ -20,9 +20,10 @@ import android.view.View;
 import com.mikepconroy.traveljournal.fragments.OnBackPressListener;
 import com.mikepconroy.traveljournal.fragments.holidays.HolidayDetailsFragment;
 import com.mikepconroy.traveljournal.fragments.holidays.HolidayListFragment;
+import com.mikepconroy.traveljournal.fragments.photos.PhotoDetailsFragment;
 import com.mikepconroy.traveljournal.fragments.photos.PhotoListFragment;
-import com.mikepconroy.traveljournal.fragments.photos.dummy.DummyContent;
 import com.mikepconroy.traveljournal.model.db.Holiday;
+import com.mikepconroy.traveljournal.model.db.Photo;
 
 public  class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -142,12 +143,12 @@ public  class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_holidays) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Holidays clicked.");
-            updateFragment(new HolidayListFragment());
+            updateFragment(new HolidayListFragment(), false);
         } else if (id == R.id.nav_places) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Places clicked.");
         } else if (id == R.id.nav_photos) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Photos clicked.");
-            updateFragment(new PhotoListFragment());
+            updateFragment(new PhotoListFragment(), false);
         } else if (id == R.id.nav_travel_galleries) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Travel Gallery clicked.");
         } else if (id == R.id.nav_camera) {
@@ -173,24 +174,15 @@ public  class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public void onHolidayListItemInteraction(Holiday item) {
-
-        Log.i(Configuration.TAG, "MainActivity#OnListFragmentInteractions:" +
-            "Opening HolidayDetailsFragment with item: " + item.getId());
-        //Toast.makeText(this, "You clicked " + item.toString(), Toast.LENGTH_SHORT).show();
-        HolidayDetailsFragment holidayFragment = HolidayDetailsFragment.newInstance(item.getId());
-        updateFragment(holidayFragment);
-
-    }
-
-    private void updateFragment(Fragment fragment){
+    private void updateFragment(Fragment fragment, boolean addToBackStack){
         FragmentTransaction transaction =
                 getSupportFragmentManager().beginTransaction();
         // Replace whatever is in the fragment_container view with this fragment,
         // and add the transaction to the back stack so the user can navigate back
         transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
+        if(addToBackStack){
+            transaction.addToBackStack(null);
+        }
         // Commit the transaction
         transaction.commit();
     }
@@ -205,7 +197,21 @@ public  class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPhotoListItemInteraction(DummyContent.DummyItem item) {
+    public void onHolidayListItemInteraction(Holiday item) {
+
+        Log.i(Configuration.TAG, "MainActivity#OnListFragmentInteractions:" +
+                "Opening HolidayDetailsFragment with item: " + item.getId());
+        //Toast.makeText(this, "You clicked " + item.toString(), Toast.LENGTH_SHORT).show();
+        HolidayDetailsFragment holidayFragment = HolidayDetailsFragment.newInstance(item.getId());
+        updateFragment(holidayFragment, true);
+    }
+
+    @Override
+    public void onPhotoListItemInteraction(Photo item) {
         //TODO: Open fragment for editing a photo.
+        Log.i(Configuration.TAG, "MainActivity#OnPhotoListInteraction: Opening PhotoDetails with ID: " + item.getId());
+        Log.d(Configuration.TAG, "Photo: " + item.toString());
+        PhotoDetailsFragment photoDetailsFragment = PhotoDetailsFragment.newInstance(item.getId());
+        updateFragment(photoDetailsFragment, true);
     }
 }

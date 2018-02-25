@@ -23,4 +23,7 @@
     <string name="edit_holiday_title">Edit Holiday</string>
 
     <string name="title_activity_holiday_and_trip_chooser">Choose Holiday or Place</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

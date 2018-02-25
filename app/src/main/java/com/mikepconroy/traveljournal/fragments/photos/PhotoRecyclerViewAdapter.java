@@ -1,5 +1,6 @@
 package com.mikepconroy.traveljournal.fragments.photos;
 
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,16 +9,16 @@ import android.widget.ImageView;
 
 import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.fragments.photos.PhotoListFragment.OnPhotoListInteractionListener;
-import com.mikepconroy.traveljournal.fragments.photos.dummy.DummyContent.DummyItem;
+import com.mikepconroy.traveljournal.model.db.Photo;
 
 import java.util.List;
 
 public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Photo> mValues;
     private final OnPhotoListInteractionListener mListener;
 
-    public PhotoRecyclerViewAdapter(List<DummyItem> items, OnPhotoListInteractionListener listener) {
+    public PhotoRecyclerViewAdapter(List<Photo> items, OnPhotoListInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -32,8 +33,9 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
+        holder.mImage.setImageURI(Uri.parse(holder.mItem.getImagePath()));
 
-        holder.mImage.setImageResource(R.drawable.photo_not_found);
+       // holder.mImage.setImageResource(R.drawable.photo_not_found);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +57,7 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final ImageView mImage;
-        public DummyItem mItem;
+        public Photo mItem;
 
         public ViewHolder(View view) {
             super(view);
