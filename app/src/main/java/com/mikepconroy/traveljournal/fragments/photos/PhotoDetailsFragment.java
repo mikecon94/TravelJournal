@@ -82,7 +82,7 @@ public class PhotoDetailsFragment extends Fragment {
                 Log.i(Configuration.TAG, "PhotoDetailsFragment: FAB Clicked.");
                 //Start the Edit Holiday Fragment.
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                //ft.replace(R.id.fragment_container, EditPhotoFragment.newInstance(photoId));
+                ft.replace(R.id.fragment_container, EditPhotoFragment.newInstance(photoId));
                 ft.addToBackStack(null);
                 ft.commit();
             }
@@ -206,6 +206,8 @@ public class PhotoDetailsFragment extends Fragment {
             updatePhotoDetailsDisplay(photo);
         }
     }
+
+    //TODO Add a loader for places.
 
     private class LoadHoliday extends AsyncTask<Integer, Void, Holiday> {
         @Override

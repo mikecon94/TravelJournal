@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
@@ -48,199 +49,10 @@ import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 
-public class NewPhotoFragment extends EditableBaseFragment {
+public class NewPhotoFragment extends PhotoEditableBaseFragment {
 
-    protected static final int REQUEST_PLACE = 0;
-    protected static final int REQUEST_IMAGE = 1;
-    protected static final int REQUEST_HOLIDAY_TRIP = 2;
-
-    private boolean mapCreated = false;
-
-    private GoogleMap googleMap;
-
-    //We need to track these when they are set as the views do not store them.
-    private String imagePath;
-    private int holidayId = -1;
-    private int tripId = -1;
 
     public NewPhotoFragment() {}
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        Log.i(Configuration.TAG, "NewPhotoFragment#onCreateView: Creating View.");
-        final View view = inflater.inflate(R.layout.fragment_photo_edit_base, container, false);
-
-        ImageView image = view.findViewById(R.id.photo_image);
-        image.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_IMAGE);
-            }
-        });
-
-        Button chooseTripHolidayButton = view.findViewById(R.id.associate_image_button);
-        chooseTripHolidayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getActivity(), HolidayAndTripChooserActivity.class);
-                startActivityForResult(i, REQUEST_HOLIDAY_TRIP);
-            }
-        });
-
-        final CheckBox checkBox = view.findViewById(R.id.location_enabled);
-        if(isNetworkAvailable()){
-            checkBox.setChecked(true);
-            createMap(view);
-        } else {
-            checkBox.setChecked(false);
-            view.findViewById(R.id.map_view).setVisibility(View.GONE);
-        }
-
-        LinearLayout locationEnableLayout = view.findViewById(R.id.location_enabled_layout);
-        locationEnableLayout.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                if(checkBox.isChecked()){
-                    checkBox.setChecked(false);
-                    view.findViewById(R.id.map_view).setVisibility(View.GONE);
-                } else {
-                    if(isNetworkAvailable()){
-                        checkBox.setChecked(true);
-                        view.findViewById(R.id.map_view).setVisibility(View.VISIBLE);
-                        if(!mapCreated){
-                            createMap(view);
-                        }
-                    } else {
-                        Toast.makeText(getContext(), "No internet available to display map.", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-
-        FloatingActionButton fab = getActivity().findViewById(R.id.fab);
-        fab.setVisibility(View.GONE);
-
-        Button saveItemButton = view.findViewById(R.id.save_image_button);
-        saveItemButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                saveItem();
-            }
-        });
-
-        return view;
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-    private void createMap(View view){
-
-        final MapView mMapView = view.findViewById(R.id.map_view);
-        mMapView.onCreate(Bundle.EMPTY);
-
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(final GoogleMap googleMap) {
-                MapsInitializer.initialize(getContext());
-
-                googleMap.getUiSettings().setAllGesturesEnabled(false);
-                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                    @Override
-                    public void onMapClick(LatLng latLng) {
-                        Log.i(Configuration.TAG, "NewPhotoFragment: Map clicked. Launching PlacePicker.");
-                        if (isNetworkAvailable()) {
-
-                            VisibleRegion mapBounds = googleMap.getProjection().getVisibleRegion();
-
-                            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-                            builder.setLatLngBounds(mapBounds.latLngBounds);
-
-                            try {
-                                startActivityForResult(builder.build(getActivity()), REQUEST_PLACE);
-                            } catch (GooglePlayServicesNotAvailableException | GooglePlayServicesRepairableException e) {
-                                e.printStackTrace();
-                                Toast.makeText(getActivity(), "Location chooser unavailable.", Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
-                    }}
-                });
-
-                NewPhotoFragment.this.googleMap = googleMap;
-
-                //TODO: Update this to show current location. (Update target sdk back to 26).
-                //Set location to Aston University.
-                LatLng location = new LatLng(52.486864, -1.888372);
-                placeMarkerAndZoom(location);
-                mMapView.onResume();
-                mapCreated = true;
-            }
-        });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_PLACE) {
-                Place place = PlacePicker.getPlace(getActivity(), data);
-                placeMarkerAndZoom(place.getLatLng());
-            } else if (requestCode == REQUEST_IMAGE){
-                Log.i(Configuration.TAG, "NewPhotoFragment#onActivityResult: Image Received.");
-
-                //TODO: The image resets on rotate.
-                //TODO: Update this to store the image in a Photo Entity (?).
-                Uri uri = data.getData();
-                displayImage(uri);
-            } else if (requestCode == REQUEST_HOLIDAY_TRIP) {
-                Log.i(Configuration.TAG, "NewPhotoFragment#onActivityResult: Holiday or Trip received.");
-                Toast.makeText(getContext(), "Holiday / Trip Chosen.", Toast.LENGTH_SHORT).show();
-                int id = (int) data.getExtras().get(Configuration.ITEM_ID);
-                String title = (String) data.getExtras().get(Configuration.ITEM_TITLE);
-                String type = (String) data.getExtras().get(Configuration.ITEM_TYPE);
-
-                Button associateButton = getActivity().findViewById(R.id.associate_image_button);
-
-                if(type.equals(Configuration.HOLIDAY_ITEM)){
-                    holidayId = id;
-                    tripId = -1;
-                    title = "Holiday: " + title;
-                } else if (type.equals(Configuration.TRIP_ITEM)){
-                    tripId = id;
-                    holidayId = -1;
-                    title = "Place: " + title;
-                }
-                associateButton.setText(title);
-            }
-        }
-    }
-
-    private void displayImage(Uri uri){
-        Log.i(Configuration.TAG, "Image URI: " + uri.toString());
-        ImageView imageView = getActivity().findViewById(R.id.photo_image);
-        imageView.setImageURI(uri);
-        try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
-            imagePath = saveImage(bitmap, UUID.randomUUID().toString());
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-    }
-
-    private void placeMarkerAndZoom(LatLng location){
-        googleMap.clear();
-        googleMap.addMarker(new MarkerOptions().position(location));
-        CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(location, 17.0f);
-        googleMap.animateCamera(camUpdate);
-    }
 
     @Override
     public void onResume() {
@@ -249,58 +61,8 @@ public class NewPhotoFragment extends EditableBaseFragment {
     }
 
     @Override
-    protected void saveItem() {
-        View view = getView();
-        if(imagePath == null) {
-            Toast.makeText(getContext(), "Please choose a photo.", Toast.LENGTH_SHORT).show();
-        } else {
-
-            String tags = ((EditText) view.findViewById(R.id.image_tags)).getText().toString();
-            CheckBox addLocation = view.findViewById(R.id.location_enabled);
-
-            Photo photo = new Photo();
-            photo.setImagePath(imagePath);
-            photo.setTags(tags);
-            if (holidayId != -1) {
-                photo.setHolidayId(holidayId);
-            } else if (tripId != -1) {
-                photo.setPlaceId(tripId);
-            }
-
-            if (addLocation.isChecked()) {
-                LatLng location = googleMap.getCameraPosition().target;
-                photo.setLatitude(location.latitude);
-                photo.setLongitude(location.longitude);
-            }
-
-            Log.i(Configuration.TAG, "NewPhotoFragment#saveItem: Saving Photo: " + photo.toString());
-            new InsertPhotoTask().execute(photo);
-
-            Toast.makeText(getContext(), "Photo Saved!", Toast.LENGTH_SHORT).show();
-            getFragmentManager().popBackStack();
-        }
-    }
-
-
-    //Takes a filename so when we edit photos users can overwrite current ones.
-    private String saveImage(Bitmap image, String fileName){
-        ContextWrapper contextWrapper = new ContextWrapper(getContext());
-        File directory = contextWrapper.getDir("images", Context.MODE_PRIVATE);
-        File file = new File(directory, fileName);
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(file);
-            image.compress(Bitmap.CompressFormat.PNG, 100, fos);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                fos.close();
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-        }
-        return directory.getAbsolutePath() + "/" + fileName;
+    protected void savePhotoToDatabase(Photo photo) {
+        new InsertPhotoTask().execute(photo);
     }
 
     private class InsertPhotoTask extends AsyncTask<Photo, Void, Void> {
