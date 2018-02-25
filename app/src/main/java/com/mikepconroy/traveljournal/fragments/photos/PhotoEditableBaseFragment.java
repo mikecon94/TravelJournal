@@ -246,7 +246,15 @@ public abstract class PhotoEditableBaseFragment extends EditableBaseFragment {
         imageView.setImageURI(uri);
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
-            imagePath = saveImage(bitmap, UUID.randomUUID().toString());
+            Log.i(Configuration.TAG, "displayImage: imagePath = " + imagePath);
+            if(imagePath == null){
+                imagePath = saveImage(bitmap, UUID.randomUUID().toString());
+            } else {
+                //The iamgepath is already set so we overwrite the current image instead of creating a new one.
+                File image = new File(imagePath);
+                imagePath = saveImage(bitmap, image.getName());
+            }
+
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -266,7 +274,9 @@ public abstract class PhotoEditableBaseFragment extends EditableBaseFragment {
             e.printStackTrace();
         } finally {
             try {
-                fos.close();
+                if(fos != null) {
+                    fos.close();
+                }
             } catch (IOException e){
                 e.printStackTrace();
             }
