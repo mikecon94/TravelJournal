@@ -1,5 +1,6 @@
 package com.mikepconroy.traveljournal.fragments.holidays;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.mikepconroy.traveljournal.Configuration;
@@ -66,6 +68,10 @@ public class EditHolidayFragment extends HolidayEditableBaseFragment {
             startDateField.setText(holiday.getStartDate());
             Button endDateField = getActivity().findViewById(R.id.holiday_end_date);
             endDateField.setText(holiday.getEndDate());
+            ImageView profilePhoto = getActivity().findViewById(R.id.holiday_image);
+            if(holiday.getProfilePhotoPath() != null && !holiday.getProfilePhotoPath().equals("")) {
+                profilePhoto.setImageURI(Uri.parse(holiday.getProfilePhotoPath()));
+            }
         }
     }
 

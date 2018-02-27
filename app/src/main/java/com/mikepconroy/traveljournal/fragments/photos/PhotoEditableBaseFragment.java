@@ -1,5 +1,6 @@
 package com.mikepconroy.traveljournal.fragments.photos;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
@@ -236,6 +237,13 @@ public abstract class PhotoEditableBaseFragment extends EditableBaseFragment {
                     title = "Place: " + title;
                 }
                 associateButton.setText(title);
+            }
+        } else if(resultCode == Activity.RESULT_CANCELED){
+            if(requestCode == REQUEST_IMAGE){
+                Log.i(Configuration.TAG, "HolidayEditableBaseFragment#onActivityResult: Image Removed.");
+                imagePath = null;
+                ImageView imageView = getActivity().findViewById(R.id.photo_image);
+                imageView.setImageResource(R.drawable.photo_not_found);
             }
         }
     }

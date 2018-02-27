@@ -21,6 +21,7 @@ import com.mikepconroy.traveljournal.Configuration;
 import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.fragments.DatePickerFragment;
 import com.mikepconroy.traveljournal.fragments.EditableBaseFragment;
+import com.mikepconroy.traveljournal.fragments.photos.HolidayAndTripChooserActivity;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 
 import java.io.IOException;
@@ -38,12 +39,15 @@ public abstract class HolidayEditableBaseFragment extends EditableBaseFragment {
     protected static final int REQUEST_START_DATE = 0;
     protected static final int REQUEST_END_DATE = 1;
     protected static final int REQUEST_IMAGE = 2;
+    protected static final int REQUEST_IMAGE_PATH = 3;
 
     private static final String DATE_PATTERN = "dd/MM/yyyy";
     private SimpleDateFormat formatter = new SimpleDateFormat(DATE_PATTERN);
 
     private Button startDateButton;
     private Button endDateButton;
+
+    private String imagePath;
 
     //If holidayId is -1 then we are inserting.
     protected int holidayId = -1;
@@ -69,10 +73,12 @@ public abstract class HolidayEditableBaseFragment extends EditableBaseFragment {
         holidayPhoto.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_IMAGE);
+//                Intent intent = new Intent();
+//                intent.setType("image/*");
+//                intent.setAction(Intent.ACTION_GET_CONTENT);
+//                startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_IMAGE);
+                Intent i = new Intent(getActivity(), PhotoChooserActivity.class);
+                startActivityForResult(i, REQUEST_IMAGE_PATH);
             }
         });
 
@@ -153,6 +159,20 @@ public abstract class HolidayEditableBaseFragment extends EditableBaseFragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            } else if (requestCode == REQUEST_IMAGE_PATH){
+                //TODO!!!
+                Log.i(Configuration.TAG, "HolidayEditableBaseFragment#onActivityResult: Image Path Received.");
+                Toast.makeText(getContext(), "Photo Chosen.", Toast.LENGTH_SHORT).show();
+                imagePath = (String) data.getExtras().get("imagePath");
+                ImageView imageView = getActivity().findViewById(R.id.holiday_image);
+                imageView.setImageURI(Uri.parse(imagePath));
+            }
+        } else if(resultCode == Activity.RESULT_CANCELED){
+            if(requestCode == REQUEST_IMAGE_PATH){
+                Log.i(Configuration.TAG, "HolidayEditableBaseFragment#onActivityResult: Image Path Removed.");
+                imagePath = null;
+                ImageView imageView = getActivity().findViewById(R.id.holiday_image);
+                imageView.setImageResource(R.drawable.photo_not_found);
             }
         }
     }
@@ -178,7 +198,7 @@ public abstract class HolidayEditableBaseFragment extends EditableBaseFragment {
             holiday.setNotes(notes);
             holiday.setStartDate(startDate);
             holiday.setEndDate(endDate);
-
+            holiday.setProfilePhotoPath(imagePath);
             Log.i(Configuration.TAG, "saveHoliday: Saving Holiday with name: " + holiday.getTitle());
             saveHolidayToDatabase(holiday);
 

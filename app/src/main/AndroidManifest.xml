@@ -32,8 +32,11 @@
         <activity
             android:name=".fragments.photos.HolidayAndTripChooserActivity"
             android:label="@string/title_activity_holiday_and_trip_chooser"
-            android:theme="@style/AppTheme.NoActionBar"
-            ></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".fragments.holidays.PhotoChooserActivity"
+            android:label="@string/title_activity_photo_chooser"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

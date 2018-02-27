@@ -13,7 +13,7 @@ import com.mikepconroy.traveljournal.Configuration;
  */
 
 //TODO: Enable schema exporting.
-@Database(entities = {Holiday.class, Photo.class}, version = 2, exportSchema = false)
+@Database(entities = {Holiday.class, Photo.class}, version = 3, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase INSTANCE;

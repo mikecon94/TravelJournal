@@ -21,7 +21,12 @@ public class Holiday {
     private String endDate;
     private String notes;
 
-    //TODO: Potentially have a field here for photo_id to store the holidays "profile pic".
+    //TODO: This is fragile and relies on the photo not being deleted. - Stores the photos path.
+    //If a user edits the photo object then the path remains the same (thankfully).
+    //Can't store the photo id due to issues loading the image path in room.
+    //Could potentially look at using the id as the filename...
+    @ColumnInfo(name = "photo_path")
+    private String profilePhotoPath;
 
     //TODO: Add a list of Place IDs as a foreign key (Places associated with this holiday).
 
@@ -64,4 +69,8 @@ public class Holiday {
     public void setNotes(String notes){
         this.notes = notes;
     }
+
+    public String getProfilePhotoPath() { return this.profilePhotoPath; }
+
+    public void setProfilePhotoPath(String profilePhotoPath) { this.profilePhotoPath = profilePhotoPath; }
 }

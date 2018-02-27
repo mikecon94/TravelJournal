@@ -1,5 +1,6 @@
 package com.mikepconroy.traveljournal.fragments.holidays;
 
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +34,12 @@ public class HolidayRecyclerAdapter extends RecyclerView.Adapter<HolidayRecycler
     public void onBindViewHolder(final ViewHolder holder, int position) {
         //TODO: Update this to display appropriate image.
         holder.mItem = mValues.get(position);
-        holder.mImageView.setImageResource(R.drawable.photo_not_found);
+
+        String imagePath = mValues.get(position).getProfilePhotoPath();
+        if(imagePath != null && !imagePath.equals("")) {
+            Uri imageUri = Uri.parse(imagePath);
+            holder.mImageView.setImageURI(imageUri);
+        }
         holder.mTitle.setText(mValues.get(position).getTitle());
         holder.mStartDate.setText(mValues.get(position).getStartDate());
         holder.mEndDate.setText(mValues.get(position).getEndDate());
