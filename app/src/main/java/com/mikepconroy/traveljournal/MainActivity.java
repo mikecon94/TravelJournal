@@ -1,12 +1,21 @@
 package com.mikepconroy.traveljournal;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -20,16 +29,24 @@ import android.view.View;
 import com.mikepconroy.traveljournal.fragments.OnBackPressListener;
 import com.mikepconroy.traveljournal.fragments.holidays.HolidayDetailsFragment;
 import com.mikepconroy.traveljournal.fragments.holidays.HolidayListFragment;
+import com.mikepconroy.traveljournal.fragments.photos.NewPhotoFragment;
 import com.mikepconroy.traveljournal.fragments.photos.PhotoDetailsFragment;
 import com.mikepconroy.traveljournal.fragments.photos.PhotoListFragment;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 import com.mikepconroy.traveljournal.model.db.Photo;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
 
 public  class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         HolidayListFragment.HolidayListInteractionListener,
         PhotoListFragment.OnPhotoListInteractionListener,
         OnFragmentUpdateListener {
+
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private Uri imagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +170,7 @@ public  class MainActivity extends AppCompatActivity
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Travel Gallery clicked.");
         } else if (id == R.id.nav_camera) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Camera clicked.");
+            dispatchTakePictureIntent();
         } else if (id == R.id.nav_map) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Map clicked.");
         } else if (id == R.id.nav_search) {
@@ -193,6 +211,69 @@ public  class MainActivity extends AppCompatActivity
             enableNavDrawer();
         } else {
             disableNavDrawer();
+        }
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+                Log.i(Configuration.TAG, photoFile.getAbsolutePath());
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                ex.printStackTrace();
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.mikepconroy.traveljournal.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        String imageFileName = UUID.randomUUID().toString();
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+//                contextWrapper.getDir("images", Context.MODE_PRIVATE);
+        File image = File.createTempFile(imageFileName, "", storageDir);
+        imagePath = Uri.fromFile(image);
+        //mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.i(Configuration.TAG, "MainActivity: Result received.");
+        if(requestCode == REQUEST_IMAGE_CAPTURE){
+            if(resultCode == Activity.RESULT_OK){
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imagePath);
+                    NewPhotoFragment newPhoto = new NewPhotoFragment();
+
+                    Bundle b = new Bundle();
+                    b.putString("imagePath", imagePath.toString());
+                    newPhoto.setArguments(b);
+
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, newPhoto)
+                            .addToBackStack(null).commit();
+
+                    //updateFragment(newPhoto, false);
+                    //TODO: Open Activity that creates a new photo passing in the URI. Then open the photo list view (updating the nav drawer).
+
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -53,6 +54,19 @@ public class NewPhotoFragment extends PhotoEditableBaseFragment {
 
 
     public NewPhotoFragment() {}
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        if(getArguments() != null && getArguments().getString("imagePath") != null) {
+            imagePath = getArguments().getString("imagePath");
+            ImageView imageView = view.findViewById(R.id.photo_image);
+            imageView.setImageURI(Uri.parse(imagePath));
+        }
+        
+        return view;
+    }
 
     @Override
     public void onResume() {

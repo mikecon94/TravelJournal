@@ -17,6 +17,7 @@ import com.mikepconroy.traveljournal.model.db.Photo;
 
 public class PhotoChooserActivity extends AppCompatActivity implements PhotoListFragment.OnPhotoListInteractionListener {
 
+    //TODO Take in a Holiday or Trip ID so the fragment only displays related trips.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -258,7 +258,7 @@ public abstract class PhotoEditableBaseFragment extends EditableBaseFragment {
             if(imagePath == null){
                 imagePath = saveImage(bitmap, UUID.randomUUID().toString());
             } else {
-                //The iamgepath is already set so we overwrite the current image instead of creating a new one.
+                //The imagePath is already set so we overwrite the current image instead of creating a new one.
                 File image = new File(imagePath);
                 imagePath = saveImage(bitmap, image.getName());
             }
