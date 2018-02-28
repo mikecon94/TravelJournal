@@ -317,9 +317,13 @@ public abstract class PhotoEditableBaseFragment extends EditableBaseFragment {
             }
 
             if (addLocation.isChecked()) {
-                LatLng location = googleMap.getCameraPosition().target;
-                photo.setLatitude(location.latitude);
-                photo.setLongitude(location.longitude);
+                try {
+                    LatLng location = googleMap.getCameraPosition().target;
+                    photo.setLatitude(location.latitude);
+                    photo.setLongitude(location.longitude);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
             }
 
             savePhotoToDatabase(photo);

@@ -2,11 +2,8 @@ package com.mikepconroy.traveljournal;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -34,6 +31,8 @@ import com.mikepconroy.traveljournal.fragments.photos.PhotoDetailsFragment;
 import com.mikepconroy.traveljournal.fragments.photos.PhotoListFragment;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 import com.mikepconroy.traveljournal.model.db.Photo;
+import com.mikepconroy.traveljournal.fragments.places.PlaceListFragment;
+import com.mikepconroy.traveljournal.fragments.places.dummy.DummyContent;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,6 +42,7 @@ public  class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         HolidayListFragment.HolidayListInteractionListener,
         PhotoListFragment.OnPhotoListInteractionListener,
+        PlaceListFragment.OnPlaceListInteractionListener,
         OnFragmentUpdateListener {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -163,6 +163,7 @@ public  class MainActivity extends AppCompatActivity
             updateFragment(new HolidayListFragment(), false);
         } else if (id == R.id.nav_places) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Places clicked.");
+            updateFragment(new PlaceListFragment(), false);
         } else if (id == R.id.nav_photos) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Photos clicked.");
             updateFragment(new PhotoListFragment(), false);
@@ -286,5 +287,10 @@ public  class MainActivity extends AppCompatActivity
         Log.d(Configuration.TAG, "Photo: " + item.toString());
         PhotoDetailsFragment photoDetailsFragment = PhotoDetailsFragment.newInstance(item.getId());
         updateFragment(photoDetailsFragment, true);
+    }
+
+    @Override
+    public void onPlaceListItemInteraction(DummyContent.DummyItem item) {
+        //TODO
     }
 }
