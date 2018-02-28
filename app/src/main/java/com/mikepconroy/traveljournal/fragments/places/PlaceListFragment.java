@@ -24,6 +24,10 @@ public class PlaceListFragment extends Fragment {
     private int mColumnCount = 1;
     private OnPlaceListInteractionListener mListener;
 
+    /**
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
+     */
     public PlaceListFragment() {}
 
     // TODO: Customize parameter initialization

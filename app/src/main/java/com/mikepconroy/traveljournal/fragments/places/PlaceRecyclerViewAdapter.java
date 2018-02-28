@@ -66,8 +66,10 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecycler
         public ViewHolder(View view) {
             super(view);
             mView = view;
+
             mIdView = view.findViewById(R.id.place_title);
             mContentView = view.findViewById(R.id.associated_holiday);
+
         }
 
         @Override
