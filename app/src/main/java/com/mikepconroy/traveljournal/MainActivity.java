@@ -255,24 +255,16 @@ public  class MainActivity extends AppCompatActivity
         Log.i(Configuration.TAG, "MainActivity: Result received.");
         if(requestCode == REQUEST_IMAGE_CAPTURE){
             if(resultCode == Activity.RESULT_OK){
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imagePath);
-                    NewPhotoFragment newPhoto = new NewPhotoFragment();
+                NewPhotoFragment newPhoto = new NewPhotoFragment();
 
-                    Bundle b = new Bundle();
-                    b.putString("imagePath", imagePath.toString());
-                    newPhoto.setArguments(b);
+                Bundle b = new Bundle();
+                b.putString("imagePath", imagePath.toString());
+                newPhoto.setArguments(b);
 
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, newPhoto)
-                            .addToBackStack(null).commit();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, newPhoto)
+                        .addToBackStack(null).commit();
 
-                    //updateFragment(newPhoto, false);
-                    //TODO: Open Activity that creates a new photo passing in the URI. Then open the photo list view (updating the nav drawer).
-
-                } catch (IOException e){
-                    e.printStackTrace();
-                }
             }
         }
     }

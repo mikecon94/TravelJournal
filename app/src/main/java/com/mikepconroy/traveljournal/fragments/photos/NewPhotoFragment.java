@@ -64,7 +64,7 @@ public class NewPhotoFragment extends PhotoEditableBaseFragment {
             ImageView imageView = view.findViewById(R.id.photo_image);
             imageView.setImageURI(Uri.parse(imagePath));
         }
-        
+
         return view;
     }
 
