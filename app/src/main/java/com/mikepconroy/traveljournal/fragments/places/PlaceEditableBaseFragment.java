@@ -3,7 +3,6 @@ package com.mikepconroy.traveljournal.fragments.places;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +14,9 @@ import com.mikepconroy.traveljournal.Configuration;
 import com.mikepconroy.traveljournal.HolidayChooserActivity;
 import com.mikepconroy.traveljournal.PhotoChooserActivity;
 import com.mikepconroy.traveljournal.R;
+import com.mikepconroy.traveljournal.fragments.EditableBaseFragment;
 
-public abstract class PlaceEditableBaseFragment extends Fragment {
+public abstract class PlaceEditableBaseFragment extends EditableBaseFragment {
 
     protected static final int REQUEST_IMAGE_PATH = 0;
     protected static final int REQUEST_HOLIDAY_TRIP = 1;
