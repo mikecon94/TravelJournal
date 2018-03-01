@@ -11,15 +11,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.LatLng;
 import com.mikepconroy.traveljournal.Configuration;
 import com.mikepconroy.traveljournal.HolidayChooserActivity;
+import com.mikepconroy.traveljournal.MapViewWrapper;
 import com.mikepconroy.traveljournal.PhotoChooserActivity;
 import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.fragments.DatePickerFragment;
 import com.mikepconroy.traveljournal.fragments.EditableBaseFragment;
+import com.mikepconroy.traveljournal.model.db.Place;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,6 +43,9 @@ public abstract class PlaceEditableBaseFragment extends EditableBaseFragment {
     private Button dateButton;
 
     private String imagePath;
+    private MapViewWrapper mapViewWrapper;
+
+    protected int holidayId = -1;
 
     //If placeId is -1 then we are inserting.
     protected int placeId = -1;
@@ -99,6 +110,10 @@ public abstract class PlaceEditableBaseFragment extends EditableBaseFragment {
             }
         });
 
+        MapView mapView = view.findViewById(R.id.map_view);
+        mapViewWrapper = new MapViewWrapper(mapView, this);
+        mapViewWrapper.createMap();
+
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
 
@@ -116,15 +131,27 @@ public abstract class PlaceEditableBaseFragment extends EditableBaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_DATE){
+            if (requestCode == REQUEST_DATE) {
                 Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
                 Log.i(Configuration.TAG, "PlaceEditableBaseFragment#onActivityResult: Setting date: " + date.toString());
                 dateButton.setText(formatter.format(date));
-            } else if (requestCode == REQUEST_IMAGE_PATH){
+            } else if (requestCode == REQUEST_IMAGE_PATH) {
                 Log.i(Configuration.TAG, "PlaceEditableBaseFragment#onActivityResult: Image Path Received.");
                 imagePath = (String) data.getExtras().get("imagePath");
                 ImageView imageView = getActivity().findViewById(R.id.place_image);
                 imageView.setImageURI(Uri.parse(imagePath));
+            } else if (requestCode == REQUEST_HOLIDAY_TRIP){
+                Log.i(Configuration.TAG, "PlaceEditableBaseFragment#onActivityResult: Holiday received.");
+                Toast.makeText(getContext(), "Holiday Chosen.", Toast.LENGTH_SHORT).show();
+                int id = (int) data.getExtras().get(Configuration.ITEM_ID);
+                String title = (String) data.getExtras().get(Configuration.ITEM_TITLE);
+                Button associateButton = getActivity().findViewById(R.id.associate_holiday_button);
+                holidayId = id;
+                title = "Holiday: " + title;
+                associateButton.setText(title);
+            } else if (requestCode == MapViewWrapper.REQUEST_PLACE) {
+                com.google.android.gms.location.places.Place place = PlacePicker.getPlace(getActivity(), data);
+                mapViewWrapper.placeMarkerAndZoom(place.getLatLng());
             }
         } else if(resultCode == Activity.RESULT_CANCELED){
             if(requestCode == REQUEST_IMAGE_PATH){
@@ -136,6 +163,49 @@ public abstract class PlaceEditableBaseFragment extends EditableBaseFragment {
         }
     }
 
-    protected abstract void saveItem();
+    @Override
+    protected void saveItem() {
+        View view = getView();
+
+        String title = ((EditText) view.findViewById(R.id.place_title)).getText().toString();
+        String notes = ((EditText) view.findViewById(R.id.place_notes)).getText().toString();
+        String date = ((Button) view.findViewById(R.id.place_date_button)).getText().toString();
+
+
+        if(title == null || title.trim().length() == 0) {
+            Toast.makeText(getContext(), "Please enter a place name.", Toast.LENGTH_SHORT).show();
+        } else {
+            Place place = new Place();
+
+            if(placeId != -1){
+                place.setId(placeId);
+            }
+
+            place.setTitle(title);
+            place.setNotes(notes);
+            place.setDate(date);
+
+            if(imagePath != null && !imagePath.equals("")){
+                place.setPhotoPath(imagePath);
+            }
+
+            if(holidayId != -1){
+                place.setHolidayId(holidayId);
+            }
+
+            try {
+                LatLng location = mapViewWrapper.getGoogleMap().getCameraPosition().target;
+                place.setLatitude(location.latitude);
+                place.setLongitude(location.longitude);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+            savePlaceToDatabase(place);
+            Toast.makeText(getContext(), "Place Saved!", Toast.LENGTH_SHORT).show();
+            getFragmentManager().popBackStack();
+        }
+    }
+
+    protected abstract void savePlaceToDatabase(Place place);
 
 }

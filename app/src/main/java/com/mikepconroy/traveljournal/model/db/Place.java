@@ -10,6 +10,7 @@ public class Place {
     private int id;
 
     private String title;
+    private String notes;
     private String date;
     private String photoPath;
     private int holidayId;
@@ -72,6 +73,15 @@ public class Place {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
 }

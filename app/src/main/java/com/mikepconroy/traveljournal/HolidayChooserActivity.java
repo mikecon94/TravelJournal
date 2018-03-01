@@ -47,8 +47,8 @@ public class HolidayChooserActivity extends AppCompatActivity implements Holiday
     @Override
     public void onHolidayListItemInteraction(Holiday item) {
         Intent i = new Intent();
-        i.putExtra("holidayId", item.getId());
-        i.putExtra("holidayTitle", item.getTitle());
+        i.putExtra(Configuration.ITEM_ID, item.getId());
+        i.putExtra(Configuration.ITEM_TITLE, item.getTitle());
         setResult(RESULT_OK, i);
         finish();
     }
