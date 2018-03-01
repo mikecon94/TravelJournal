@@ -13,7 +13,7 @@ import com.mikepconroy.traveljournal.Configuration;
  */
 
 //TODO: Enable schema exporting.
-@Database(entities = {Holiday.class, Photo.class}, version = 3, exportSchema = false)
+@Database(entities = {Holiday.class, Photo.class, Place.class}, version = 4, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase INSTANCE;
@@ -30,6 +30,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract HolidayDao holidayDao();
     public abstract PhotoDao photoDao();
+    public abstract PlaceDao placeDao();
 
     //TODO: Add Dao abstract methods for the other entities.
 }
