@@ -29,10 +29,9 @@ import com.mikepconroy.traveljournal.fragments.holidays.HolidayListFragment;
 import com.mikepconroy.traveljournal.fragments.photos.NewPhotoFragment;
 import com.mikepconroy.traveljournal.fragments.photos.PhotoDetailsFragment;
 import com.mikepconroy.traveljournal.fragments.photos.PhotoListFragment;
+import com.mikepconroy.traveljournal.fragments.places.PlaceListFragment;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 import com.mikepconroy.traveljournal.model.db.Photo;
-import com.mikepconroy.traveljournal.fragments.places.PlaceListFragment;
-import com.mikepconroy.traveljournal.fragments.places.dummy.DummyContent;
 import com.mikepconroy.traveljournal.model.db.Place;
 
 import java.io.File;

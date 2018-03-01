@@ -1,4 +1,4 @@
-package com.mikepconroy.traveljournal.fragments.photos;
+package com.mikepconroy.traveljournal;
 
 import android.content.Intent;
 import android.os.Bundle;

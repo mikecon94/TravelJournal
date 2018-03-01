@@ -18,10 +18,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.mikepconroy.traveljournal.Configuration;
+import com.mikepconroy.traveljournal.PhotoChooserActivity;
 import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.fragments.DatePickerFragment;
 import com.mikepconroy.traveljournal.fragments.EditableBaseFragment;
-import com.mikepconroy.traveljournal.fragments.photos.HolidayAndTripChooserActivity;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 
 import java.io.IOException;
@@ -73,10 +73,6 @@ public abstract class HolidayEditableBaseFragment extends EditableBaseFragment {
         holidayPhoto.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent();
-//                intent.setType("image/*");
-//                intent.setAction(Intent.ACTION_GET_CONTENT);
-//                startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_IMAGE);
                 Intent i = new Intent(getActivity(), PhotoChooserActivity.class);
                 startActivityForResult(i, REQUEST_IMAGE_PATH);
             }

@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,10 +18,7 @@ import android.widget.TextView;
 import com.mikepconroy.traveljournal.Configuration;
 import com.mikepconroy.traveljournal.OnFragmentUpdateListener;
 import com.mikepconroy.traveljournal.R;
-import com.mikepconroy.traveljournal.fragments.holidays.HolidayRecyclerAdapter;
-import com.mikepconroy.traveljournal.fragments.places.dummy.DummyContent.DummyItem;
 import com.mikepconroy.traveljournal.model.db.AppDatabase;
-import com.mikepconroy.traveljournal.model.db.Holiday;
 import com.mikepconroy.traveljournal.model.db.Place;
 
 import java.util.List;
@@ -140,10 +138,10 @@ public class PlaceListFragment extends Fragment {
                 public void onClick(View view) {
                     Log.i(Configuration.TAG, "PlaceListFragment: FAB Clicked.");
                     //Start the Edit Holiday Fragment.
-//                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-//                    ft.replace(R.id.fragment_container, new NewPlaceFragment());
-//                    ft.addToBackStack(null);
-//                    ft.commit();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.fragment_container, new NewPlaceFragment());
+                    ft.addToBackStack(null);
+                    ft.commit();
                 }
             });
         }

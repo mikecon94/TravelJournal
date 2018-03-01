@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.fragments.places.PlaceListFragment.PlaceListInteractionListener;
-import com.mikepconroy.traveljournal.fragments.places.dummy.DummyContent.DummyItem;
 import com.mikepconroy.traveljournal.model.db.Place;
 
 import java.util.List;

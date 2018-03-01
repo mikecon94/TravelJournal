@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -38,9 +37,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.VisibleRegion;
 import com.mikepconroy.traveljournal.Configuration;
+import com.mikepconroy.traveljournal.HolidayAndTripChooserActivity;
 import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.fragments.EditableBaseFragment;
-import com.mikepconroy.traveljournal.model.db.AppDatabase;
 import com.mikepconroy.traveljournal.model.db.Photo;
 
 import java.io.File;
