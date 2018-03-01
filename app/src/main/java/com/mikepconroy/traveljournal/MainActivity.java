@@ -33,6 +33,7 @@ import com.mikepconroy.traveljournal.model.db.Holiday;
 import com.mikepconroy.traveljournal.model.db.Photo;
 import com.mikepconroy.traveljournal.fragments.places.PlaceListFragment;
 import com.mikepconroy.traveljournal.fragments.places.dummy.DummyContent;
+import com.mikepconroy.traveljournal.model.db.Place;
 
 import java.io.File;
 import java.io.IOException;
@@ -272,7 +273,6 @@ public  class MainActivity extends AppCompatActivity
 
     @Override
     public void onHolidayListItemInteraction(Holiday item) {
-
         Log.i(Configuration.TAG, "MainActivity#OnListFragmentInteractions:" +
                 "Opening HolidayDetailsFragment with item: " + item.getId());
         //Toast.makeText(this, "You clicked " + item.toString(), Toast.LENGTH_SHORT).show();
@@ -282,7 +282,6 @@ public  class MainActivity extends AppCompatActivity
 
     @Override
     public void onPhotoListItemInteraction(Photo item) {
-        //TODO: Open fragment for editing a photo.
         Log.i(Configuration.TAG, "MainActivity#OnPhotoListInteraction: Opening PhotoDetails with ID: " + item.getId());
         Log.d(Configuration.TAG, "Photo: " + item.toString());
         PhotoDetailsFragment photoDetailsFragment = PhotoDetailsFragment.newInstance(item.getId());
@@ -290,7 +289,7 @@ public  class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPlaceListItemInteraction(DummyContent.DummyItem item) {
-        //TODO
+    public void onPlaceListItemInteraction(Place item) {
+        //TODO Open fragment with place details.
     }
 }

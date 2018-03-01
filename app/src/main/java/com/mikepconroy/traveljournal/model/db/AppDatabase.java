@@ -32,5 +32,4 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract PhotoDao photoDao();
     public abstract PlaceDao placeDao();
 
-    //TODO: Add Dao abstract methods for the other entities.
 }

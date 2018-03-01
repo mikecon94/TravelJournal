@@ -24,8 +24,7 @@
                 android:id="@+id/place_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/text_margin"
-                android:layout_marginTop="@dimen/text_margin"
+                android:layout_margin="@dimen/text_margin"
                 android:text="Hello"
                 android:textAppearance="?attr/textAppearanceListItem" />
 
@@ -41,12 +40,14 @@
                     android:text="01/01/2018"/>
             </LinearLayout>
 
+            <!--TODO: Revisit putting the holiday title in the list view -->
             <TextView
                 android:layout_marginLeft="@dimen/text_margin"
                 android:id="@+id/associated_holiday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No Holiday"/>
+                android:text="No Holiday"
+                android:visibility="gone"/>
         </LinearLayout>
     </LinearLayout>
 

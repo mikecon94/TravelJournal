@@ -1,14 +1,17 @@
 package com.mikepconroy.traveljournal.fragments.places;
 
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.fragments.places.PlaceListFragment.PlaceListInteractionListener;
 import com.mikepconroy.traveljournal.fragments.places.dummy.DummyContent.DummyItem;
+import com.mikepconroy.traveljournal.model.db.Place;
 
 import java.util.List;
 
@@ -19,10 +22,10 @@ import java.util.List;
  */
 public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Place> mValues;
     private final PlaceListInteractionListener mListener;
 
-    public PlaceRecyclerViewAdapter(List<DummyItem> items, PlaceListInteractionListener listener) {
+    public PlaceRecyclerViewAdapter(List<Place> items, PlaceListInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -38,8 +41,13 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecycler
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
 
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mTitleView.setText(mValues.get(position).getTitle());
+
+        if(mValues.get(position).getPhotoPath() != null) {
+            holder.mImageView.setImageURI(Uri.parse(mValues.get(position).getPhotoPath()));
+        }
+        holder.mDateView.setText(mValues.get(position).getDate());
+
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,22 +68,24 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecycler
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+        public final TextView mTitleView;
+        public final ImageView mImageView;
+        public final TextView mDateView;
+
+        public Place mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
 
-            mIdView = view.findViewById(R.id.place_title);
-            mContentView = view.findViewById(R.id.associated_holiday);
-
+            mTitleView = view.findViewById(R.id.place_title);
+            mImageView = view.findViewById(R.id.place_image);
+            mDateView = view.findViewById(R.id.place_date);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mTitleView.getText() + "'";
         }
     }
 }

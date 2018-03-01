@@ -1,10 +1,10 @@
 package com.mikepconroy.traveljournal.fragments.places;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,17 +14,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.android.gms.location.places.Place;
 import com.mikepconroy.traveljournal.Configuration;
 import com.mikepconroy.traveljournal.OnFragmentUpdateListener;
 import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.fragments.holidays.HolidayRecyclerAdapter;
-import com.mikepconroy.traveljournal.fragments.holidays.NewHolidayFragment;
-import com.mikepconroy.traveljournal.fragments.places.dummy.DummyContent;
 import com.mikepconroy.traveljournal.fragments.places.dummy.DummyContent.DummyItem;
+import com.mikepconroy.traveljournal.model.db.AppDatabase;
 import com.mikepconroy.traveljournal.model.db.Holiday;
+import com.mikepconroy.traveljournal.model.db.Place;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PlaceListFragment extends Fragment {
@@ -82,7 +80,7 @@ public class PlaceListFragment extends Fragment {
             recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
 
-        //new LoadPlaces().execute();
+        new LoadPlaces().execute();
 
         return view;
     }
@@ -105,8 +103,7 @@ public class PlaceListFragment extends Fragment {
                     "Displaying RecyclerView.");
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
-            recyclerView.setAdapter(new PlaceRecyclerViewAdapter(DummyContent.ITEMS, mListener));
-//            recyclerView.setAdapter(new HolidayRecyclerAdapter(places, mListener));
+            recyclerView.setAdapter(new PlaceRecyclerViewAdapter(places, mListener));
         }
     }
 
@@ -151,12 +148,22 @@ public class PlaceListFragment extends Fragment {
             });
         }
 
-        //TODO Remove
-        updatePlaceListView(new ArrayList<Place>());
-
     }
 
     public interface PlaceListInteractionListener extends OnFragmentUpdateListener {
-        void onPlaceListItemInteraction(DummyItem item);
+        void onPlaceListItemInteraction(Place item);
+    }
+
+    private class LoadPlaces extends AsyncTask<Void, Void, List<Place>> {
+        @Override
+        protected List<Place> doInBackground(Void... params) {
+            Log.i(Configuration.TAG, "PlaceListFragment#doInBackground: Finding places..");
+            return AppDatabase.getInstance(getContext()).placeDao().getAllPlaces();
+        }
+
+        @Override
+        protected void onPostExecute(List<Place> places) {
+            Log.i(Configuration.TAG, "PlaceListFragment: AsyncTask complete. No. of Places: " + places.size());
+            updatePlaceListView(places);        }
     }
 }
