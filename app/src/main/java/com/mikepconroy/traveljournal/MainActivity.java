@@ -42,7 +42,7 @@ public  class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         HolidayListFragment.HolidayListInteractionListener,
         PhotoListFragment.OnPhotoListInteractionListener,
-        PlaceListFragment.OnPlaceListInteractionListener,
+        PlaceListFragment.PlaceListInteractionListener,
         OnFragmentUpdateListener {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -162,7 +162,7 @@ public  class MainActivity extends AppCompatActivity
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Holidays clicked.");
             updateFragment(new HolidayListFragment(), false);
         } else if (id == R.id.nav_places) {
-            Log.i(Configuration.TAG, "MainActivity#NavDrawer: Places clicked.");
+            Log.i(Configuration.TAG, "MainActivity#NavDrawer: Place clicked.");
             updateFragment(new PlaceListFragment(), false);
         } else if (id == R.id.nav_photos) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Photos clicked.");

@@ -42,7 +42,7 @@ public class HolidayAndTripChooserActivity extends AppCompatActivity implements 
 
         adapter.addFragment(new HolidayListFragment(), "Holidays");
         //TODO: Change this to Trips List fragment once complete.
-        adapter.addFragment(new HolidayListFragment(), "Places");
+        adapter.addFragment(new HolidayListFragment(), "Place");
         viewPager.setAdapter(adapter);
 
         TabLayout tabLayout = findViewById(R.id.tabs);

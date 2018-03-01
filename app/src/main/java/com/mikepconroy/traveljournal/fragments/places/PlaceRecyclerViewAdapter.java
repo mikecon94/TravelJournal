@@ -7,22 +7,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mikepconroy.traveljournal.R;
-import com.mikepconroy.traveljournal.fragments.places.PlaceListFragment.OnPlaceListInteractionListener;
+import com.mikepconroy.traveljournal.fragments.places.PlaceListFragment.PlaceListInteractionListener;
 import com.mikepconroy.traveljournal.fragments.places.dummy.DummyContent.DummyItem;
 
 import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnPlaceListInteractionListener}.
+ * specified {@link PlaceListInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecyclerViewAdapter.ViewHolder> {
 
     private final List<DummyItem> mValues;
-    private final OnPlaceListInteractionListener mListener;
+    private final PlaceListInteractionListener mListener;
 
-    public PlaceRecyclerViewAdapter(List<DummyItem> items, OnPlaceListInteractionListener listener) {
+    public PlaceRecyclerViewAdapter(List<DummyItem> items, PlaceListInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -37,6 +37,7 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecycler
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
+
         holder.mIdView.setText(mValues.get(position).id);
         holder.mContentView.setText(mValues.get(position).content);
 

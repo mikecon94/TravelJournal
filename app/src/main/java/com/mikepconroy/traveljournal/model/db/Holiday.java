@@ -28,7 +28,7 @@ public class Holiday {
     @ColumnInfo(name = "photo_path")
     private String profilePhotoPath;
 
-    //TODO: Add a list of Place IDs as a foreign key (Places associated with this holiday).
+    //TODO: Add a list of Place IDs as a foreign key (Place associated with this holiday).
 
     public int getId(){
         return this.id;

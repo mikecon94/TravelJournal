@@ -35,11 +35,6 @@ public class HolidayListFragment extends Fragment {
     private int mColumnCount = 1;
     private HolidayListInteractionListener mListener;
 
-    //Display this if there is data.
-    private RecyclerView recyclerView;
-    //Display this when there is no data.
-    private TextView emptyView;
-
     //TODO: Currently all Holidays are controlled via access to the databse.
     //This may cause issues with performance. Should look into loading the list into memory
     //and managing it entirely in there.
