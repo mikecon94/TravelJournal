@@ -243,10 +243,9 @@ public  class MainActivity extends AppCompatActivity
         String imageFileName = UUID.randomUUID().toString();
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
-//                contextWrapper.getDir("images", Context.MODE_PRIVATE);
         File image = File.createTempFile(imageFileName, "", storageDir);
+        Log.i(Configuration.TAG, "MainActivity: Image Store File Created: "+ image.toString());
         imagePath = Uri.fromFile(image);
-        //mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
 

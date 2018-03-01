@@ -9,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -270,8 +271,7 @@ public abstract class PhotoEditableBaseFragment extends EditableBaseFragment {
 
     //Takes a filename so when we edit photos users can overwrite current ones.
     private String saveImage(Bitmap image, String fileName){
-        ContextWrapper contextWrapper = new ContextWrapper(getContext());
-        File directory = contextWrapper.getDir("images", Context.MODE_PRIVATE);
+        File directory = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File file = new File(directory, fileName);
         FileOutputStream fos = null;
         try {
