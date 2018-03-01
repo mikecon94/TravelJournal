@@ -79,7 +79,7 @@ public class EditPhotoFragment extends PhotoEditableBaseFragment {
                 Log.i(Configuration.TAG, "EditPhotoFragment#updatePhotoDetailsDisplay: LatLng are set.");
                 getView().findViewById(R.id.map_view).setVisibility(View.VISIBLE);
                 ((CheckBox) getView().findViewById(R.id.location_enabled)).setChecked(true);
-                placeMarkerAndZoom(new LatLng(photo.getLatitude(), photo.getLongitude()));
+                mapViewWrapper.placeMarkerAndZoom(new LatLng(photo.getLatitude(), photo.getLongitude()));
             }
         }
     }
