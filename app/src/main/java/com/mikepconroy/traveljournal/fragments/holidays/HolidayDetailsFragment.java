@@ -21,14 +21,6 @@ import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.model.db.AppDatabase;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnFragmentUpdateListener} interface
- * to handle interaction events.
- * Use the {@link HolidayDetailsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class HolidayDetailsFragment extends Fragment {
 
     private static final String HOLIDAY_ID = "holidayId";
