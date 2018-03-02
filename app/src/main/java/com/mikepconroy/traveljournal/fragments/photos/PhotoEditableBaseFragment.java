@@ -178,7 +178,7 @@ public abstract class PhotoEditableBaseFragment extends EditableBaseFragment {
                     holidayId = id;
                     tripId = -1;
                     title = "Holiday: " + title;
-                } else if (type.equals(Configuration.TRIP_ITEM)){
+                } else if (type.equals(Configuration.PLACE_ITEM)){
                     tripId = id;
                     holidayId = -1;
                     title = "Place: " + title;

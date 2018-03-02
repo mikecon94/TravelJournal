@@ -37,9 +37,11 @@ import com.mikepconroy.traveljournal.OnFragmentUpdateListener;
 import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.fragments.holidays.EditHolidayFragment;
 import com.mikepconroy.traveljournal.fragments.holidays.HolidayDetailsFragment;
+import com.mikepconroy.traveljournal.fragments.places.PlaceDetailsFragment;
 import com.mikepconroy.traveljournal.model.db.AppDatabase;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 import com.mikepconroy.traveljournal.model.db.Photo;
+import com.mikepconroy.traveljournal.model.db.Place;
 
 public class PhotoDetailsFragment extends Fragment {
 
@@ -161,6 +163,7 @@ public class PhotoDetailsFragment extends Fragment {
                 Log.i(Configuration.TAG, "PhotoDetailsFragment: Photo is associated with a place." + photo.getPlaceId());
                 viewAssociatedTrip.setText("Loading Associated Place");
                 //TODO Load Place.
+                new LoadPlaceTask().execute(photo.getPlaceId());
             } else {
                 //TODO Maybe remove the button if there is no associated trip.
                 viewAssociatedTrip.setText("No associated trip");
@@ -188,6 +191,21 @@ public class PhotoDetailsFragment extends Fragment {
                 Log.i(Configuration.TAG, "PhotoDetailsFragment: Opening Holiday Details Fragment with ID: " + holiday.getId());
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.replace(R.id.fragment_container, HolidayDetailsFragment.newInstance(holiday.getId()));
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
+    }
+
+    private void updateAssociatedTripButton(final Place place){
+        Button viewAssociatedTrip = getView().findViewById(R.id.view_associated_trip);
+        viewAssociatedTrip.setText("View Place: " + place.getTitle());
+        viewAssociatedTrip.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Log.i(Configuration.TAG, "PhotoDetailsFragment: Opening Place Details Fragment with ID: " + place.getId());
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_container, PlaceDetailsFragment.newInstance(place.getId()));
                 ft.addToBackStack(null);
                 ft.commit();
             }
@@ -245,6 +263,17 @@ public class PhotoDetailsFragment extends Fragment {
     }
 
     //TODO Add a loader for places.
+    private class LoadPlaceTask extends AsyncTask<Integer, Void, Place> {
+        @Override
+        protected Place doInBackground(Integer... placeId) {
+            return AppDatabase.getInstance(getContext()).placeDao().findPlaceById(placeId[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Place place) {
+            updateAssociatedTripButton(place);
+        }
+    }
 
     private class LoadHoliday extends AsyncTask<Integer, Void, Holiday> {
         @Override

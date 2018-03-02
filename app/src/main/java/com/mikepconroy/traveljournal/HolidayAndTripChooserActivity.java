@@ -14,13 +14,15 @@ import android.view.View;
 import com.mikepconroy.traveljournal.Configuration;
 import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.fragments.holidays.HolidayListFragment;
+import com.mikepconroy.traveljournal.fragments.places.PlaceListFragment;
 import com.mikepconroy.traveljournal.model.db.Holiday;
+import com.mikepconroy.traveljournal.model.db.Place;
 
 import java.util.ArrayList;
 import java.util.List;
 
 ///TODO: Extract most of this to a base class. Subclasses would only edit the viewpager.
-public class HolidayAndTripChooserActivity extends AppCompatActivity implements HolidayListFragment.HolidayListInteractionListener {
+public class HolidayAndTripChooserActivity extends AppCompatActivity implements HolidayListFragment.HolidayListInteractionListener, PlaceListFragment.PlaceListInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +43,7 @@ public class HolidayAndTripChooserActivity extends AppCompatActivity implements 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         adapter.addFragment(new HolidayListFragment(), "Holidays");
-        //TODO: Change this to Trips List fragment once complete.
-        adapter.addFragment(new HolidayListFragment(), "Place");
+        adapter.addFragment(new PlaceListFragment(), "Place");
         viewPager.setAdapter(adapter);
 
         TabLayout tabLayout = findViewById(R.id.tabs);
@@ -52,6 +53,14 @@ public class HolidayAndTripChooserActivity extends AppCompatActivity implements 
     @Override
     public void onFragmentOpened(String title, boolean navDrawerActive) {
         //Nothing to do.
+    }
+
+    @Override
+    public void onPlaceListItemInteraction(Place item) {
+        int id = item.getId();
+        String title = item.getTitle();
+        String itemType = Configuration.PLACE_ITEM;
+        returnResult(id, title, itemType);
     }
 
     @Override

@@ -13,7 +13,7 @@ public class Configuration {
     public static final String ITEM_TITLE = "ITEM_TITLE";
 
     public static final String HOLIDAY_ITEM = "HOLIDAY";
-    public static final String TRIP_ITEM = "TRIP";
+    public static final String PLACE_ITEM = "PLACE";
 
     public static final String DATE_PATTERN = "dd/MM/yyyy";
     public static final String DIALOG_DATE = "date";
