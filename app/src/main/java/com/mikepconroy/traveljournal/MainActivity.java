@@ -44,6 +44,7 @@ public  class MainActivity extends AppCompatActivity
         HolidayListFragment.HolidayListInteractionListener,
         PhotoListFragment.OnPhotoListInteractionListener,
         PlaceListFragment.PlaceListInteractionListener,
+
         OnFragmentUpdateListener {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;

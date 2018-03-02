@@ -39,14 +39,12 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecycler
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-
         holder.mTitleView.setText(mValues.get(position).getTitle());
 
         if(mValues.get(position).getPhotoPath() != null) {
             holder.mImageView.setImageURI(Uri.parse(mValues.get(position).getPhotoPath()));
         }
         holder.mDateView.setText(mValues.get(position).getDate());
-
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +74,6 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecycler
         public ViewHolder(View view) {
             super(view);
             mView = view;
-
             mTitleView = view.findViewById(R.id.place_title);
             mImageView = view.findViewById(R.id.place_image);
             mDateView = view.findViewById(R.id.place_date);
