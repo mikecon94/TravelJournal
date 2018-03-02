@@ -8,8 +8,6 @@
 
     <uses-feature android:name="android.hardware.camera" android:required="true" />
 
-
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -44,13 +42,19 @@
             android:value="AIzaSyCWN54HC9IilTRUlx1_lHpTl3828ODrNd8" />
 
         <activity
-            android:name=".fragments.photos.HolidayAndTripChooserActivity"
+            android:name=".HolidayAndTripChooserActivity"
             android:label="@string/title_activity_holiday_and_trip_chooser"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".fragments.holidays.PhotoChooserActivity"
+            android:name=".PhotoChooserActivity"
             android:label="@string/title_activity_photo_chooser"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity
+            android:name=".HolidayChooserActivity"
+            android:label="@string/title_activity_holiday_chooser"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
     </application>
 
 </manifest>

@@ -1,38 +1,35 @@
-package com.mikepconroy.traveljournal.fragments.holidays;
+package com.mikepconroy.traveljournal;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.mikepconroy.traveljournal.Configuration;
-import com.mikepconroy.traveljournal.R;
-import com.mikepconroy.traveljournal.fragments.photos.PhotoListFragment;
-import com.mikepconroy.traveljournal.model.db.Photo;
+import com.mikepconroy.traveljournal.fragments.holidays.HolidayListFragment;
+import com.mikepconroy.traveljournal.model.db.Holiday;
 
-public class PhotoChooserActivity extends AppCompatActivity implements PhotoListFragment.OnPhotoListInteractionListener {
+/**
+ * Created by mikecon on 01/03/2018.
+ */
 
-    //TODO Take in a Holiday or Trip ID so the fragment only displays related trips.
+public class HolidayChooserActivity extends AppCompatActivity implements HolidayListFragment.HolidayListInteractionListener{
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_photo_chooser);
+        setContentView(R.layout.activity_holiday_chooser);
 
-        PhotoListFragment photoListFragment = new PhotoListFragment();
+        HolidayListFragment holidayListFragment = new HolidayListFragment();
 
-        //This ensures the fragment hasn't already been placed into the activity.
-        //onCreate is called on screen rotation.
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
-        if(fragment == null) {
+        if (fragment == null) {
             // Add the fragment to the 'fragment_container' FrameLayout
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, photoListFragment).commit();
+                    .add(R.id.fragment_container, holidayListFragment).commit();
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -48,9 +45,10 @@ public class PhotoChooserActivity extends AppCompatActivity implements PhotoList
     }
 
     @Override
-    public void onPhotoListItemInteraction(Photo item) {
+    public void onHolidayListItemInteraction(Holiday item) {
         Intent i = new Intent();
-        i.putExtra("imagePath", item.getImagePath());
+        i.putExtra(Configuration.ITEM_ID, item.getId());
+        i.putExtra(Configuration.ITEM_TITLE, item.getTitle());
         setResult(RESULT_OK, i);
         finish();
     }

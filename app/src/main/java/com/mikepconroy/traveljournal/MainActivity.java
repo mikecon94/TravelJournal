@@ -29,10 +29,10 @@ import com.mikepconroy.traveljournal.fragments.holidays.HolidayListFragment;
 import com.mikepconroy.traveljournal.fragments.photos.NewPhotoFragment;
 import com.mikepconroy.traveljournal.fragments.photos.PhotoDetailsFragment;
 import com.mikepconroy.traveljournal.fragments.photos.PhotoListFragment;
+import com.mikepconroy.traveljournal.fragments.places.PlaceListFragment;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 import com.mikepconroy.traveljournal.model.db.Photo;
-import com.mikepconroy.traveljournal.fragments.places.PlaceListFragment;
-import com.mikepconroy.traveljournal.fragments.places.dummy.DummyContent;
+import com.mikepconroy.traveljournal.model.db.Place;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +42,8 @@ public  class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         HolidayListFragment.HolidayListInteractionListener,
         PhotoListFragment.OnPhotoListInteractionListener,
-        PlaceListFragment.OnPlaceListInteractionListener,
+        PlaceListFragment.PlaceListInteractionListener,
+
         OnFragmentUpdateListener {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -162,7 +163,7 @@ public  class MainActivity extends AppCompatActivity
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Holidays clicked.");
             updateFragment(new HolidayListFragment(), false);
         } else if (id == R.id.nav_places) {
-            Log.i(Configuration.TAG, "MainActivity#NavDrawer: Places clicked.");
+            Log.i(Configuration.TAG, "MainActivity#NavDrawer: Place clicked.");
             updateFragment(new PlaceListFragment(), false);
         } else if (id == R.id.nav_photos) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Photos clicked.");
@@ -243,10 +244,9 @@ public  class MainActivity extends AppCompatActivity
         String imageFileName = UUID.randomUUID().toString();
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
-//                contextWrapper.getDir("images", Context.MODE_PRIVATE);
         File image = File.createTempFile(imageFileName, "", storageDir);
+        Log.i(Configuration.TAG, "MainActivity: Image Store File Created: "+ image.toString());
         imagePath = Uri.fromFile(image);
-        //mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
 
@@ -272,7 +272,6 @@ public  class MainActivity extends AppCompatActivity
 
     @Override
     public void onHolidayListItemInteraction(Holiday item) {
-
         Log.i(Configuration.TAG, "MainActivity#OnListFragmentInteractions:" +
                 "Opening HolidayDetailsFragment with item: " + item.getId());
         //Toast.makeText(this, "You clicked " + item.toString(), Toast.LENGTH_SHORT).show();
@@ -282,7 +281,6 @@ public  class MainActivity extends AppCompatActivity
 
     @Override
     public void onPhotoListItemInteraction(Photo item) {
-        //TODO: Open fragment for editing a photo.
         Log.i(Configuration.TAG, "MainActivity#OnPhotoListInteraction: Opening PhotoDetails with ID: " + item.getId());
         Log.d(Configuration.TAG, "Photo: " + item.toString());
         PhotoDetailsFragment photoDetailsFragment = PhotoDetailsFragment.newInstance(item.getId());
@@ -290,7 +288,7 @@ public  class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPlaceListItemInteraction(DummyContent.DummyItem item) {
-        //TODO
+    public void onPlaceListItemInteraction(Place item) {
+        //TODO Open fragment with place details.
     }
 }

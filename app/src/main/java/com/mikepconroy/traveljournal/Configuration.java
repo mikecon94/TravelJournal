@@ -14,4 +14,8 @@ public class Configuration {
 
     public static final String HOLIDAY_ITEM = "HOLIDAY";
     public static final String TRIP_ITEM = "TRIP";
+
+    public static final String DATE_PATTERN = "dd/MM/yyyy";
+    public static final String DIALOG_DATE = "date";
+
 }

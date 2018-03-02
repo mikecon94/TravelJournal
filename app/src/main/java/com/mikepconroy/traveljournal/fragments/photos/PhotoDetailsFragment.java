@@ -1,6 +1,7 @@
 package com.mikepconroy.traveljournal.fragments.photos;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +10,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -40,6 +44,7 @@ import com.mikepconroy.traveljournal.model.db.Photo;
 public class PhotoDetailsFragment extends Fragment {
 
     private static final String PHOTO_ID = "photoId";
+    private String imagePath;
     private int photoId;
 
     private OnFragmentUpdateListener mListener;
@@ -65,6 +70,7 @@ public class PhotoDetailsFragment extends Fragment {
             Log.e(Configuration.TAG, "Photo Details opened without Photo ID");
             getFragmentManager().popBackStack();
         }
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -93,6 +99,36 @@ public class PhotoDetailsFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.share_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_share:
+                shareImage();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void shareImage(){
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.setType("image/*");
+
+        if(imagePath.indexOf("file://") == -1){
+            imagePath = "file://" + imagePath;
+        }
+
+        share.putExtra(Intent.EXTRA_STREAM, Uri.parse(imagePath));
+        startActivity(Intent.createChooser(share, "Share Image"));
+    }
+
     private void updatePhotoDetailsDisplay(Photo photo){
         if(photo == null){
             Log.e(Configuration.TAG, "PhotoDetailsFragment: Photo not found.");
@@ -103,6 +139,7 @@ public class PhotoDetailsFragment extends Fragment {
             mListener.onFragmentOpened("Photo Details", false);
 
             ImageView imageView = getActivity().findViewById(R.id.photo_image);
+            imagePath = photo.getImagePath();
             imageView.setImageURI(Uri.parse(photo.getImagePath()));
 
             TextView tags = getActivity().findViewById(R.id.image_tags);

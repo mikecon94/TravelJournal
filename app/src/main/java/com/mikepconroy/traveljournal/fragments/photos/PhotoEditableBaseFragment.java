@@ -8,8 +8,8 @@ import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -38,9 +38,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.VisibleRegion;
 import com.mikepconroy.traveljournal.Configuration;
+import com.mikepconroy.traveljournal.HolidayAndTripChooserActivity;
+import com.mikepconroy.traveljournal.MapViewWrapper;
+import com.mikepconroy.traveljournal.NetworkChecker;
 import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.fragments.EditableBaseFragment;
-import com.mikepconroy.traveljournal.model.db.AppDatabase;
 import com.mikepconroy.traveljournal.model.db.Photo;
 
 import java.io.File;
@@ -52,7 +54,6 @@ import static android.app.Activity.RESULT_OK;
 
 public abstract class PhotoEditableBaseFragment extends EditableBaseFragment {
 
-    protected static final int REQUEST_PLACE = 0;
     protected static final int REQUEST_IMAGE = 1;
     protected static final int REQUEST_HOLIDAY_TRIP = 2;
 
@@ -61,8 +62,8 @@ public abstract class PhotoEditableBaseFragment extends EditableBaseFragment {
     protected int holidayId = -1;
     protected int tripId = -1;
 
-    protected boolean mapCreated = false;
-    protected GoogleMap googleMap;
+    protected MapViewWrapper mapViewWrapper;
+    private NetworkChecker netChecker;
 
     //If photoId is -1 then we are inserting.
     protected int photoId = -1;
@@ -103,12 +104,17 @@ public abstract class PhotoEditableBaseFragment extends EditableBaseFragment {
         });
 
         final CheckBox checkBox = view.findViewById(R.id.location_enabled);
-        if(isNetworkAvailable()){
+
+        MapView mapView = view.findViewById(R.id.map_view);
+        netChecker = new NetworkChecker(getContext());
+
+        if(netChecker.isNetworkAvailable()){
             checkBox.setChecked(true);
-            createMap(view);
+            mapViewWrapper = new MapViewWrapper(mapView, this);
+            mapViewWrapper.createMap();
         } else {
             checkBox.setChecked(false);
-            view.findViewById(R.id.map_view).setVisibility(View.GONE);
+            mapView.setVisibility(View.GONE);
         }
 
         LinearLayout locationEnableLayout = view.findViewById(R.id.location_enabled_layout);
@@ -119,11 +125,11 @@ public abstract class PhotoEditableBaseFragment extends EditableBaseFragment {
                     checkBox.setChecked(false);
                     view.findViewById(R.id.map_view).setVisibility(View.GONE);
                 } else {
-                    if(isNetworkAvailable()){
+                    if(netChecker.isNetworkAvailable()){
                         checkBox.setChecked(true);
                         view.findViewById(R.id.map_view).setVisibility(View.VISIBLE);
-                        if(!mapCreated){
-                            createMap(view);
+                        if(!mapViewWrapper.isMapCreated()){
+                            mapViewWrapper.createMap();
                         }
                     } else {
                         Toast.makeText(getContext(), "No internet available to display map.", Toast.LENGTH_SHORT).show();
@@ -146,71 +152,12 @@ public abstract class PhotoEditableBaseFragment extends EditableBaseFragment {
         return view;
     }
 
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-    private void createMap(View view){
-
-        final MapView mMapView = view.findViewById(R.id.map_view);
-        mMapView.onCreate(Bundle.EMPTY);
-
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(final GoogleMap googleMap) {
-                MapsInitializer.initialize(getContext());
-
-                googleMap.getUiSettings().setAllGesturesEnabled(false);
-                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                    @Override
-                    public void onMapClick(LatLng latLng) {
-                        Log.i(Configuration.TAG, "PhotoEditableBaseFragment: Map clicked. Launching PlacePicker.");
-                        if (isNetworkAvailable()) {
-
-                            VisibleRegion mapBounds = googleMap.getProjection().getVisibleRegion();
-
-                            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-                            builder.setLatLngBounds(mapBounds.latLngBounds);
-
-                            try {
-                                startActivityForResult(builder.build(getActivity()), REQUEST_PLACE);
-                            } catch (GooglePlayServicesNotAvailableException | GooglePlayServicesRepairableException e) {
-                                e.printStackTrace();
-                                Toast.makeText(getActivity(), "Location chooser unavailable.", Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            Toast.makeText(getActivity(), "No internet connection.", Toast.LENGTH_SHORT).show();
-                        }}
-                });
-
-                PhotoEditableBaseFragment.this.googleMap = googleMap;
-
-                //TODO: Update this to show current location. (Update target sdk back to 26).
-                //Set location to Aston University.
-                LatLng location = new LatLng(52.486864, -1.888372);
-                placeMarkerAndZoom(location);
-                mMapView.onResume();
-                mapCreated = true;
-            }
-        });
-    }
-
-    protected void placeMarkerAndZoom(LatLng location){
-        googleMap.clear();
-        googleMap.addMarker(new MarkerOptions().position(location));
-        CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(location, 17.0f);
-        googleMap.animateCamera(camUpdate);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_PLACE) {
+            if (requestCode == MapViewWrapper.REQUEST_PLACE) {
                 Place place = PlacePicker.getPlace(getActivity(), data);
-                placeMarkerAndZoom(place.getLatLng());
+                mapViewWrapper.placeMarkerAndZoom(place.getLatLng());
             } else if (requestCode == REQUEST_IMAGE){
                 Log.i(Configuration.TAG, "PhotoEditableBaseFragment#onActivityResult: Image Received.");
 
@@ -271,8 +218,7 @@ public abstract class PhotoEditableBaseFragment extends EditableBaseFragment {
 
     //Takes a filename so when we edit photos users can overwrite current ones.
     private String saveImage(Bitmap image, String fileName){
-        ContextWrapper contextWrapper = new ContextWrapper(getContext());
-        File directory = contextWrapper.getDir("images", Context.MODE_PRIVATE);
+        File directory = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File file = new File(directory, fileName);
         FileOutputStream fos = null;
         try {
@@ -317,9 +263,13 @@ public abstract class PhotoEditableBaseFragment extends EditableBaseFragment {
             }
 
             if (addLocation.isChecked()) {
-                LatLng location = googleMap.getCameraPosition().target;
-                photo.setLatitude(location.latitude);
-                photo.setLongitude(location.longitude);
+                try {
+                    LatLng location = mapViewWrapper.getGoogleMap().getCameraPosition().target;
+                    photo.setLatitude(location.latitude);
+                    photo.setLongitude(location.longitude);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
             }
 
             savePhotoToDatabase(photo);

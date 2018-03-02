@@ -18,10 +18,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.mikepconroy.traveljournal.Configuration;
+import com.mikepconroy.traveljournal.PhotoChooserActivity;
 import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.fragments.DatePickerFragment;
 import com.mikepconroy.traveljournal.fragments.EditableBaseFragment;
-import com.mikepconroy.traveljournal.fragments.photos.HolidayAndTripChooserActivity;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 
 import java.io.IOException;
@@ -35,14 +35,12 @@ import java.util.Date;
 
 public abstract class HolidayEditableBaseFragment extends EditableBaseFragment {
 
-    protected static final String DIALOG_DATE = "date";
     protected static final int REQUEST_START_DATE = 0;
     protected static final int REQUEST_END_DATE = 1;
     protected static final int REQUEST_IMAGE = 2;
     protected static final int REQUEST_IMAGE_PATH = 3;
 
-    private static final String DATE_PATTERN = "dd/MM/yyyy";
-    private SimpleDateFormat formatter = new SimpleDateFormat(DATE_PATTERN);
+    private SimpleDateFormat formatter = new SimpleDateFormat(Configuration.DATE_PATTERN);
 
     private Button startDateButton;
     private Button endDateButton;
@@ -73,10 +71,6 @@ public abstract class HolidayEditableBaseFragment extends EditableBaseFragment {
         holidayPhoto.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent();
-//                intent.setType("image/*");
-//                intent.setAction(Intent.ACTION_GET_CONTENT);
-//                startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_IMAGE);
                 Intent i = new Intent(getActivity(), PhotoChooserActivity.class);
                 startActivityForResult(i, REQUEST_IMAGE_PATH);
             }
@@ -93,7 +87,7 @@ public abstract class HolidayEditableBaseFragment extends EditableBaseFragment {
                     Date startDate = formatter.parse(startDateButton.getText().toString());
                     DatePickerFragment dialog = DatePickerFragment.newInstance(startDate);
                     dialog.setTargetFragment(HolidayEditableBaseFragment.this, REQUEST_START_DATE);
-                    dialog.show(fm, DIALOG_DATE);
+                    dialog.show(fm, Configuration.DIALOG_DATE);
                 } catch (ParseException e){
                     e.printStackTrace();
                 }
@@ -110,7 +104,7 @@ public abstract class HolidayEditableBaseFragment extends EditableBaseFragment {
                     Date endDate = formatter.parse(endDateButton.getText().toString());
                     DatePickerFragment dialog = DatePickerFragment.newInstance(endDate);
                     dialog.setTargetFragment(HolidayEditableBaseFragment.this, REQUEST_END_DATE);
-                    dialog.show(fm, DIALOG_DATE);
+                    dialog.show(fm, Configuration.DIALOG_DATE);
                 } catch (ParseException e){
                     e.printStackTrace();
                 }
@@ -162,7 +156,6 @@ public abstract class HolidayEditableBaseFragment extends EditableBaseFragment {
             } else if (requestCode == REQUEST_IMAGE_PATH){
                 //TODO!!!
                 Log.i(Configuration.TAG, "HolidayEditableBaseFragment#onActivityResult: Image Path Received.");
-                Toast.makeText(getContext(), "Photo Chosen.", Toast.LENGTH_SHORT).show();
                 imagePath = (String) data.getExtras().get("imagePath");
                 ImageView imageView = getActivity().findViewById(R.id.holiday_image);
                 imageView.setImageURI(Uri.parse(imagePath));
