@@ -42,8 +42,8 @@ public abstract class PlaceEditableBaseFragment extends EditableBaseFragment {
     private SimpleDateFormat formatter = new SimpleDateFormat(Configuration.DATE_PATTERN);
     private Button dateButton;
 
-    private String imagePath;
-    private MapViewWrapper mapViewWrapper;
+    protected String imagePath;
+    protected MapViewWrapper mapViewWrapper;
 
     protected int holidayId = -1;
 
@@ -55,7 +55,7 @@ public abstract class PlaceEditableBaseFragment extends EditableBaseFragment {
         super.onCreate(savedInstanceState);
         Log.i(Configuration.TAG, "PlaceBaseFragment#onCreate: Creating.");
         if (getArguments() != null) {
-            placeId = getArguments().getInt("holidayId");
+            placeId = getArguments().getInt("placeId");
             Log.i(Configuration.TAG, "PlaceBaseFragment#onCreate: Place ID: " + placeId);
         }
     }

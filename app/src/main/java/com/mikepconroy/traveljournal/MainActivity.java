@@ -29,6 +29,7 @@ import com.mikepconroy.traveljournal.fragments.holidays.HolidayListFragment;
 import com.mikepconroy.traveljournal.fragments.photos.NewPhotoFragment;
 import com.mikepconroy.traveljournal.fragments.photos.PhotoDetailsFragment;
 import com.mikepconroy.traveljournal.fragments.photos.PhotoListFragment;
+import com.mikepconroy.traveljournal.fragments.places.EditPlaceFragment;
 import com.mikepconroy.traveljournal.fragments.places.PlaceListFragment;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 import com.mikepconroy.traveljournal.model.db.Photo;
@@ -243,7 +244,7 @@ public  class MainActivity extends AppCompatActivity
         String imageFileName = UUID.randomUUID().toString();
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
-        File image = File.createTempFile(imageFileName, "", storageDir);
+        File image = File.createTempFile(imageFileName, ".png", storageDir);
         Log.i(Configuration.TAG, "MainActivity: Image Store File Created: "+ image.toString());
         imagePath = Uri.fromFile(image);
         return image;
@@ -289,5 +290,10 @@ public  class MainActivity extends AppCompatActivity
     @Override
     public void onPlaceListItemInteraction(Place item) {
         //TODO Open fragment with place details.
+        Log.i(Configuration.TAG, "MainActivity#OnPlaceListInteraction: Opening PlaceDetails with ID: " + item.getId());
+
+        //TODO TEMP:
+        EditPlaceFragment editFragment = EditPlaceFragment.newInstance(item.getId());
+        updateFragment(editFragment, true);
     }
 }

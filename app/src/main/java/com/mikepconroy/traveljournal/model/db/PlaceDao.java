@@ -24,9 +24,9 @@ public interface PlaceDao {
     public List<Place> getAllPlaces();
 
     @Query("SELECT * FROM Place WHERE id IS :id")
-    public Holiday findPlaceById(int id);
+    public Place findPlaceById(int id);
 
 
     @Query("SELECT * FROM Place WHERE title LIKE :search")
-    public List<Holiday> findPlaceByTitle(String search);
+    public List<Place> findPlaceByTitle(String search);
 }
