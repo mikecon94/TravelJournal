@@ -20,6 +20,7 @@ import com.mikepconroy.traveljournal.R;
 import com.mikepconroy.traveljournal.model.db.AppDatabase;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 import com.mikepconroy.traveljournal.model.db.Photo;
+import com.mikepconroy.traveljournal.model.db.Place;
 
 public class EditPhotoFragment extends PhotoEditableBaseFragment {
 
@@ -72,7 +73,7 @@ public class EditPhotoFragment extends PhotoEditableBaseFragment {
             } else if (photo.getPlaceId() != 0){
                 viewAssociatedTrip.setText("Loading Associated Place");
                 tripId = photo.getPlaceId();
-                //TODO Load Place.
+                new LoadPlace().execute(photo.getPlaceId());
             }
 
             if(photo.getLatitude() != 0 && photo.getLongitude() != 0){
@@ -84,9 +85,9 @@ public class EditPhotoFragment extends PhotoEditableBaseFragment {
         }
     }
 
-    private void updateAssociatedTripButton(final Holiday holiday){
+    private void updateAssociatedTripButton(final String title){
         Button viewAssociatedTrip = getView().findViewById(R.id.associate_image_button);
-        viewAssociatedTrip.setText("Holiday: " + holiday.getTitle());
+        viewAssociatedTrip.setText(title);
     }
 
     @Override
@@ -115,6 +116,18 @@ public class EditPhotoFragment extends PhotoEditableBaseFragment {
         }
     }
 
+    private class LoadPlace extends AsyncTask<Integer, Void, Place> {
+        @Override
+        protected Place doInBackground(Integer... placeId) {
+            Log.i(Configuration.TAG, "PhotoDetailsFragment#doInBackground: Finding place with ID: " + placeId[0]);
+            return AppDatabase.getInstance(getContext()).placeDao().findPlaceById(placeId[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Place place) {
+            updateAssociatedTripButton("Place: " + place.getTitle());
+        }
+    }
 
     private class LoadHoliday extends AsyncTask<Integer, Void, Holiday> {
         @Override
@@ -125,7 +138,7 @@ public class EditPhotoFragment extends PhotoEditableBaseFragment {
 
         @Override
         protected void onPostExecute(Holiday holiday) {
-            updateAssociatedTripButton(holiday);
+            updateAssociatedTripButton("Holiday: " + holiday.getTitle());
         }
     }
 }
