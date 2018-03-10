@@ -16,10 +16,6 @@
             android:icon="@drawable/ic_photo_black_24dp"
             android:title="Photos" />
         <item
-            android:id="@+id/nav_travel_galleries"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Travel Galleries" />
-        <item
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_menu_camera"
             android:title="Camera" />
@@ -30,8 +26,7 @@
         <item
             android:id="@+id/nav_search"
             android:icon="@drawable/ic_search_black_24dp"
-            android:title="Search"
-            />
+            android:title="Search"/>
     </group>
 
     <item android:title="Other">

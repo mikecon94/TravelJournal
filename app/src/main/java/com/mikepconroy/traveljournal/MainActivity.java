@@ -22,10 +22,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mikepconroy.traveljournal.fragments.OnBackPressListener;
 import com.mikepconroy.traveljournal.fragments.holidays.HolidayDetailsFragment;
 import com.mikepconroy.traveljournal.fragments.holidays.HolidayListFragment;
+import com.mikepconroy.traveljournal.fragments.map.MapFragment;
 import com.mikepconroy.traveljournal.fragments.photos.NewPhotoFragment;
 import com.mikepconroy.traveljournal.fragments.photos.PhotoDetailsFragment;
 import com.mikepconroy.traveljournal.fragments.photos.PhotoListFragment;
@@ -170,17 +172,17 @@ public  class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_photos) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Photos clicked.");
             updateFragment(new PhotoListFragment(), false);
-        } else if (id == R.id.nav_travel_galleries) {
-            Log.i(Configuration.TAG, "MainActivity#NavDrawer: Travel Gallery clicked.");
         } else if (id == R.id.nav_camera) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Camera clicked.");
             dispatchTakePictureIntent();
         } else if (id == R.id.nav_map) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Map clicked.");
+            updateFragment(new MapFragment(), false);
         } else if (id == R.id.nav_search) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Search clicked.");
         } else if (id == R.id.nav_settings) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Settings clicked.");
+            Toast.makeText(this, "Not yet implemented.", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_about) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: About clicked.");
              new AlertDialog.Builder(this).setTitle("About Travel Journal")

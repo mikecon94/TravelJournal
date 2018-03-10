@@ -85,6 +85,7 @@ public class MapViewWrapper {
     public void placeMarkerAndZoom(LatLng location){
         Log.i(Configuration.TAG, "MapViewWrapper: Placing Marker.");
         if(googleMap == null) {
+            Log.e(Configuration.TAG, "MapViewWrapper:  GoogleMap has not been set. Call the createMap method first.");
             throw new NullPointerException();
         }
         googleMap.clear();
