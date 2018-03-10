@@ -3,6 +3,7 @@ package com.mikepconroy.traveljournal.fragments.map;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,37 +13,34 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.VisibleRegion;
+import com.google.android.gms.maps.model.Marker;
+import com.google.maps.android.clustering.ClusterManager;
 import com.mikepconroy.traveljournal.Configuration;
-import com.mikepconroy.traveljournal.MapViewWrapper;
 import com.mikepconroy.traveljournal.OnFragmentUpdateListener;
 import com.mikepconroy.traveljournal.R;
-import com.mikepconroy.traveljournal.fragments.places.NewPlaceFragment;
+import com.mikepconroy.traveljournal.fragments.photos.PhotoDetailsFragment;
+import com.mikepconroy.traveljournal.fragments.places.PlaceDetailsFragment;
 import com.mikepconroy.traveljournal.model.db.AppDatabase;
 import com.mikepconroy.traveljournal.model.db.Photo;
 import com.mikepconroy.traveljournal.model.db.Place;
 
 import java.util.List;
 
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment implements ClusterManager.OnClusterItemInfoWindowClickListener<ClusterWrapper> {
 
     protected OnFragmentUpdateListener mListener;
 
     private GoogleMap gMap;
-
+    private ClusterWrapper clickedClusterItem;
+    private ClusterManager<ClusterWrapper> clusterManager;
 
     public MapFragment() {}
 
@@ -62,6 +60,26 @@ public class MapFragment extends Fragment {
             public void onMapReady(final GoogleMap googleMap) {
                 MapsInitializer.initialize(activity);
                 MapFragment.this.gMap = googleMap;
+
+                gMap.getUiSettings().setZoomControlsEnabled(true);
+
+                clusterManager = new ClusterManager<>(activity, gMap);
+                gMap.setOnCameraIdleListener(clusterManager);
+                gMap.setOnMarkerClickListener(clusterManager);
+                gMap.setInfoWindowAdapter(clusterManager.getMarkerManager());
+
+                gMap.setOnInfoWindowClickListener(clusterManager);
+                clusterManager.setOnClusterItemInfoWindowClickListener(MapFragment.this);
+                clusterManager.getMarkerCollection().setOnInfoWindowAdapter(new CustomInfoWindow());
+
+                clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<ClusterWrapper>() {
+                    @Override
+                    public boolean onClusterItemClick(ClusterWrapper item) {
+                        clickedClusterItem = item;
+                        return false;
+                    }
+                });
+
                 mapView.onResume();
             }
         });
@@ -76,7 +94,8 @@ public class MapFragment extends Fragment {
         for(Place place : places){
             if(place.getLongitude() != 0 && place.getLatitude() != 0) {
                 LatLng location = new LatLng(place.getLatitude(), place.getLongitude());
-                gMap.addMarker(new MarkerOptions().position(location));
+                ClusterWrapper item = new ClusterWrapper(location, place.getId(), place.getTitle(), place.getNotes());
+                clusterManager.addItem(item);
             }
         }
     }
@@ -85,7 +104,8 @@ public class MapFragment extends Fragment {
         for(Photo photo : photos){
             if(photo.getLongitude() != 0 && photo.getLatitude() != 0){
                 LatLng location = new LatLng(photo.getLatitude(), photo.getLongitude());
-                gMap.addMarker(new MarkerOptions().position(location));
+                ClusterWrapper item = new ClusterWrapper(location, photo.getId(), photo.getImagePath());
+                clusterManager.addItem(item);
             }
         }
     }
@@ -121,6 +141,23 @@ public class MapFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onClusterItemInfoWindowClick(ClusterWrapper clusterWrapper) {
+        //TODO: Open details activity for Photo/Place
+        Log.i(Configuration.TAG, "MapFragment: Info Window clicked, opening details");
+        Fragment fragment;
+        if(clusterWrapper.getImageLocation() == null){
+            fragment = PlaceDetailsFragment.newInstance(clusterWrapper.getId());
+        } else {
+            fragment = PhotoDetailsFragment.newInstance(clusterWrapper.getId());
+        }
+
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
     private class LoadPlaces extends AsyncTask<Void, Void, List<Place>> {
         @Override
         protected List<Place> doInBackground(Void... params) {
@@ -143,5 +180,40 @@ public class MapFragment extends Fragment {
             addPhotoMarkers(photos);
         }
     }
+    public class CustomInfoWindow implements GoogleMap.InfoWindowAdapter {
 
+        private final View view;
+
+        CustomInfoWindow() {
+            view = getLayoutInflater().inflate(
+                    R.layout.map_info_window, null);
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+
+            TextView title= view.findViewById(R.id.text_title);
+            TextView snippet = view.findViewById(R.id.text_snippet);
+            ImageView imageView = view.findViewById(R.id.image);
+
+            if(clickedClusterItem.getImageLocation() == null){
+                title.setText(clickedClusterItem.getTitle());
+                snippet.setText(clickedClusterItem.getSnippet());
+                snippet.setVisibility(View.VISIBLE);
+                imageView.setVisibility(View.GONE);
+            } else {
+                title.setText("Photo");
+                imageView.setImageURI(Uri.parse(clickedClusterItem.getImageLocation()));
+                snippet.setVisibility(View.GONE);
+                imageView.setVisibility(View.VISIBLE);
+        }
+
+            return view;
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            return null;
+        }
+    }
 }

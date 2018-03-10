@@ -30,6 +30,8 @@ dependencies {
     compile 'com.android.support:support-v4:26.+'
     compile 'com.android.support:recyclerview-v7:26.+'
     compile 'com.google.android.gms:play-services-places:11.8.0'
+    compile 'com.google.maps.android:android-maps-utils:0.5+'
+
 
     annotationProcessor "android.arch.lifecycle:compiler:1.1.0"
     // Room (use 1.1.0-alpha1 for latest alpha)
