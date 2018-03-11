@@ -143,7 +143,6 @@ public class MapFragment extends Fragment implements ClusterManager.OnClusterIte
 
     @Override
     public void onClusterItemInfoWindowClick(ClusterWrapper clusterWrapper) {
-        //TODO: Open details activity for Photo/Place
         Log.i(Configuration.TAG, "MapFragment: Info Window clicked, opening details");
         Fragment fragment;
         if(clusterWrapper.getImageLocation() == null){
