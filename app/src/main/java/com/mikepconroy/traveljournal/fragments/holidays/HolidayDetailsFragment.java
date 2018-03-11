@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -99,7 +101,7 @@ public class HolidayDetailsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.i(Configuration.TAG, "HolidayListFragment#onResume: Resuming.");
+        Log.i(Configuration.TAG, "HolidayDetailsFragment#onResume: Resuming.");
     }
 
     @Override

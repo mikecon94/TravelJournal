@@ -2,6 +2,7 @@ package com.mikepconroy.traveljournal;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -22,6 +23,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.mikepconroy.traveljournal.fragments.OnBackPressListener;
@@ -303,6 +306,11 @@ public  class MainActivity extends AppCompatActivity
     @Override
     public void onSearchListInteraction(SearchResultItem item) {
         Log.i(Configuration.TAG, "MainActivity#OnSearchListInteraction: Opening item.");
+
+        EditText searchBox = findViewById(R.id.search_box);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
+
         if(item.getType().equals("Holiday")){
             HolidayDetailsFragment holidayFragment = HolidayDetailsFragment.newInstance(item.getId());
             updateFragment(holidayFragment, true);
