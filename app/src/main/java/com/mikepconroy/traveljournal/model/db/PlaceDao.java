@@ -27,6 +27,6 @@ public interface PlaceDao {
     public Place findPlaceById(int id);
 
 
-    @Query("SELECT * FROM Place WHERE title LIKE :search")
+    @Query("SELECT * FROM Place WHERE title LIKE :search COLLATE NOCASE")
     public List<Place> findPlaceByTitle(String search);
 }

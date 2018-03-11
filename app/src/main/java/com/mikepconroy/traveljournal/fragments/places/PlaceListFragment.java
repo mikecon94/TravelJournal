@@ -37,7 +37,6 @@ public class PlaceListFragment extends Fragment {
      */
     public PlaceListFragment() {}
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static PlaceListFragment newInstance(int columnCount) {
         PlaceListFragment fragment = new PlaceListFragment();
@@ -145,7 +144,6 @@ public class PlaceListFragment extends Fragment {
                 }
             });
         }
-
     }
 
     public interface PlaceListInteractionListener extends OnFragmentUpdateListener {

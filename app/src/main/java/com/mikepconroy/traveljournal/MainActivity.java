@@ -31,9 +31,10 @@ import com.mikepconroy.traveljournal.fragments.map.MapFragment;
 import com.mikepconroy.traveljournal.fragments.photos.NewPhotoFragment;
 import com.mikepconroy.traveljournal.fragments.photos.PhotoDetailsFragment;
 import com.mikepconroy.traveljournal.fragments.photos.PhotoListFragment;
-import com.mikepconroy.traveljournal.fragments.places.EditPlaceFragment;
 import com.mikepconroy.traveljournal.fragments.places.PlaceDetailsFragment;
 import com.mikepconroy.traveljournal.fragments.places.PlaceListFragment;
+import com.mikepconroy.traveljournal.fragments.search.SearchFragment;
+import com.mikepconroy.traveljournal.fragments.search.SearchResultItem;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 import com.mikepconroy.traveljournal.model.db.Photo;
 import com.mikepconroy.traveljournal.model.db.Place;
@@ -47,7 +48,7 @@ public  class MainActivity extends AppCompatActivity
         HolidayListFragment.HolidayListInteractionListener,
         PhotoListFragment.OnPhotoListInteractionListener,
         PlaceListFragment.PlaceListInteractionListener,
-
+        SearchFragment.SearchListInteractionListener,
         OnFragmentUpdateListener {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -180,6 +181,7 @@ public  class MainActivity extends AppCompatActivity
             updateFragment(new MapFragment(), false);
         } else if (id == R.id.nav_search) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Search clicked.");
+            updateFragment(new SearchFragment(), false);
         } else if (id == R.id.nav_settings) {
             Log.i(Configuration.TAG, "MainActivity#NavDrawer: Settings clicked.");
             Toast.makeText(this, "Not yet implemented.", Toast.LENGTH_SHORT).show();
@@ -296,5 +298,20 @@ public  class MainActivity extends AppCompatActivity
         Log.i(Configuration.TAG, "MainActivity#OnPlaceListInteraction: Opening PlaceDetails with ID: " + item.getId());
         PlaceDetailsFragment placeDetailsFragment= PlaceDetailsFragment.newInstance(item.getId());
         updateFragment(placeDetailsFragment, true);
+    }
+
+    @Override
+    public void onSearchListInteraction(SearchResultItem item) {
+        Log.i(Configuration.TAG, "MainActivity#OnSearchListInteraction: Opening item.");
+        if(item.getType().equals("Holiday")){
+            HolidayDetailsFragment holidayFragment = HolidayDetailsFragment.newInstance(item.getId());
+            updateFragment(holidayFragment, true);
+        } else if (item.getType().equals("Place")){
+            PlaceDetailsFragment placeDetailsFragment= PlaceDetailsFragment.newInstance(item.getId());
+            updateFragment(placeDetailsFragment, true);
+        } else if (item.getType().equals("Photo")){
+            PhotoDetailsFragment photoDetailsFragment = PhotoDetailsFragment.newInstance(item.getId());
+            updateFragment(photoDetailsFragment, true);
+        }
     }
 }

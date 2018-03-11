@@ -24,4 +24,8 @@ public interface PhotoDao {
 
     @Query("SELECT * FROM Photo WHERE id IS :id")
     public Photo findPhotoById(int id);
+
+    @Query("SELECT * FROM Photo WHERE tags LIKE :search COLLATE NOCASE")
+    public List<Photo> findPhotoByTags(String search);
+
 }

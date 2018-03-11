@@ -30,6 +30,6 @@ public interface HolidayDao {
     @Query("SELECT * FROM Holiday WHERE id IS :id")
     public Holiday findHolidayById(int id);
 
-    @Query("SELECT * FROM Holiday WHERE title LIKE :search")
+    @Query("SELECT * FROM Holiday WHERE title LIKE :search COLLATE NOCASE")
     public List<Holiday> findHolidaysByTitle(String search);
 }
