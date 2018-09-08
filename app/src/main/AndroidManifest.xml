@@ -39,7 +39,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCWN54HC9IilTRUlx1_lHpTl3828ODrNd8" />
+            android:value="<REPLACE_WITH_KEY>" />
 
         <activity
             android:name=".HolidayAndTripChooserActivity"
