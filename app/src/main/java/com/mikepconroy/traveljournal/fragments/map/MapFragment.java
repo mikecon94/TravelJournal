@@ -1,14 +1,13 @@
 package com.mikepconroy.traveljournal.fragments.map;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,7 +69,7 @@ public class MapFragment extends Fragment implements ClusterManager.OnClusterIte
 
                 gMap.setOnInfoWindowClickListener(clusterManager);
                 clusterManager.setOnClusterItemInfoWindowClickListener(MapFragment.this);
-                clusterManager.getMarkerCollection().setOnInfoWindowAdapter(new CustomInfoWindow());
+                clusterManager.getMarkerCollection().setInfoWindowAdapter(new CustomInfoWindow());
 
                 clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<ClusterWrapper>() {
                     @Override

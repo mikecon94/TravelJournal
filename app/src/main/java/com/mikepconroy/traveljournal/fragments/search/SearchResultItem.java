@@ -1,6 +1,6 @@
 package com.mikepconroy.traveljournal.fragments.search;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public class SearchResultItem implements Comparable<SearchResultItem>{
 

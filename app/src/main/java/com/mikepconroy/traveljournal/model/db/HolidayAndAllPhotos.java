@@ -1,6 +1,6 @@
 package com.mikepconroy.traveljournal.model.db;
 
-import android.arch.persistence.room.Relation;
+import androidx.room.Relation;
 
 import java.util.List;
 
