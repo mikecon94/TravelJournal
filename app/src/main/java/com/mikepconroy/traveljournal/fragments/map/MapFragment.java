@@ -54,33 +54,30 @@ public class MapFragment extends Fragment implements ClusterManager.OnClusterIte
 
         final Activity activity = getActivity();
 
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(final GoogleMap googleMap) {
-                MapsInitializer.initialize(activity);
-                MapFragment.this.gMap = googleMap;
+        mapView.getMapAsync(googleMap -> {
+            MapsInitializer.initialize(activity);
+            MapFragment.this.gMap = googleMap;
 
-                gMap.getUiSettings().setZoomControlsEnabled(true);
+            gMap.getUiSettings().setZoomControlsEnabled(true);
 
-                clusterManager = new ClusterManager<>(activity, gMap);
-                gMap.setOnCameraIdleListener(clusterManager);
-                gMap.setOnMarkerClickListener(clusterManager);
-                gMap.setInfoWindowAdapter(clusterManager.getMarkerManager());
+            clusterManager = new ClusterManager<>(activity, gMap);
+            gMap.setOnCameraIdleListener(clusterManager);
+            gMap.setOnMarkerClickListener(clusterManager);
+            gMap.setInfoWindowAdapter(clusterManager.getMarkerManager());
 
-                gMap.setOnInfoWindowClickListener(clusterManager);
-                clusterManager.setOnClusterItemInfoWindowClickListener(MapFragment.this);
-                clusterManager.getMarkerCollection().setInfoWindowAdapter(new CustomInfoWindow());
+            gMap.setOnInfoWindowClickListener(clusterManager);
+            clusterManager.setOnClusterItemInfoWindowClickListener(MapFragment.this);
+            clusterManager.getMarkerCollection().setInfoWindowAdapter(new CustomInfoWindow());
 
-                clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<ClusterWrapper>() {
-                    @Override
-                    public boolean onClusterItemClick(ClusterWrapper item) {
-                        clickedClusterItem = item;
-                        return false;
-                    }
-                });
+            clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<ClusterWrapper>() {
+                @Override
+                public boolean onClusterItemClick(ClusterWrapper item) {
+                    clickedClusterItem = item;
+                    return false;
+                }
+            });
 
-                mapView.onResume();
-            }
+            mapView.onResume();
         });
 
         new LoadPlaces().execute();
