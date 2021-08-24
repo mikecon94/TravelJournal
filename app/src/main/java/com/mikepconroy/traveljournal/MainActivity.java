@@ -229,6 +229,7 @@ public  class MainActivity extends AppCompatActivity
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            Log.i(Configuration.TAG, "MainActivity#dispatchTakePictureIntent: takePictureIntent != null. Creating File location.");
             // Create the File where the photo should go
             File photoFile = null;
             try {
