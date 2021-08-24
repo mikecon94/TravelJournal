@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.mikepconroy.traveljournal.Configuration;
@@ -40,7 +41,14 @@ public abstract class EditableBaseFragment extends Fragment implements OnBackPre
     public void onBackPressed(){
         Log.i(Configuration.TAG, "EditableBaseFragment#onBackPressed");
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        Log.i(Configuration.TAG, "EditableBaseFragment#onBackPressed: Checking for current focus.");
+        View focusedView = getActivity().getCurrentFocus();
+        if (focusedView != null){
+            String focusedViewName = getResources().getResourceName(focusedView.getId());
+            Log.i(Configuration.TAG, "EditableBaseFragment#onBackPressed: Current Focus - " + focusedViewName);
+            imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
+        }
+
         new AlertDialog.Builder(getContext()).setTitle("Save changes?")
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
