@@ -2,11 +2,16 @@ package com.mikepconroy.traveljournal.fragments.places;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,6 +48,8 @@ public abstract class PlaceEditableBaseFragment extends EditableBaseFragment {
 
     protected String imagePath;
     protected MapViewWrapper mapViewWrapper;
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 565;
+    private boolean locationPermissionGranted;
 
     protected int holidayId = -1;
 
@@ -109,8 +116,9 @@ public abstract class PlaceEditableBaseFragment extends EditableBaseFragment {
             }
         });
 
+        getLocationPermission();
         MapView mapView = view.findViewById(R.id.map_view);
-        mapViewWrapper = new MapViewWrapper(mapView, this);
+        mapViewWrapper = new MapViewWrapper(mapView, this, locationPermissionGranted);
         mapViewWrapper.createMap();
 
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
@@ -125,6 +133,46 @@ public abstract class PlaceEditableBaseFragment extends EditableBaseFragment {
         });
 
         return view;
+    }
+
+    /**
+     * Prompts the user for permission to use the device location.
+     */
+    private void getLocationPermission() {
+        /*
+         * Request location permission, so that we can get the location of the
+         * device. The result of the permission request is handled by a callback,
+         * onRequestPermissionsResult.
+         */
+        if (ContextCompat.checkSelfPermission(this.getContext().getApplicationContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            locationPermissionGranted = true;
+        } else {
+            requestPermissions(
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
+    }
+
+    /**
+     * Handles the result of the request for location permissions.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        locationPermissionGranted = false;
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    locationPermissionGranted = true;
+                    mapViewWrapper.locationPermissionGranted();
+                }
+            }
+        }
     }
 
     @Override

@@ -42,7 +42,7 @@ public class EditPlaceFragment extends PlaceEditableBaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mListener.onFragmentOpened("Edit Photo", false);
+        mListener.onFragmentOpened("Edit Place", false);
     }
 
     private void updatePlaceDetailsDisplay(Place place){
@@ -83,6 +83,7 @@ public class EditPlaceFragment extends PlaceEditableBaseFragment {
             if(place.getLatitude() != 0 && place.getLongitude() != 0){
                 Log.i(Configuration.TAG, "EditPlaceFragment#updatePlaceDetailsDisplay: LatLng are set.");
                 getView().findViewById(R.id.map_view).setVisibility(View.VISIBLE);
+                Log.i(Configuration.TAG, "EditPlaceFragment#UpdatePlaceDetails: Placing Marker.");
                 mapViewWrapper.placeMarkerAndZoom(new LatLng(place.getLatitude(), place.getLongitude()));
             }
         }
