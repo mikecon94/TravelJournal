@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+
+import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.fragment.app.FragmentManager;
 import android.util.Log;
@@ -15,7 +17,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
 import com.mikepconroy.traveljournal.Configuration;
@@ -148,7 +149,11 @@ public abstract class PlaceEditableBaseFragment extends EditableBaseFragment {
                 title = "Holiday: " + title;
                 associateButton.setText(title);
             } else if (requestCode == MapViewWrapper.REQUEST_PLACE) {
-                com.google.android.gms.location.places.Place place = PlacePicker.getPlace(getActivity(), data);
+                com.google.android.libraries.places.api.model.Place place = Autocomplete.getPlaceFromIntent(data);
+                Log.i(Configuration.TAG, "PhotoEditableBaseFragment#onActivityResult: Place received. Name: "
+                        + place.getName()
+                        + ", ID: " + place.getId()
+                        + ", LatLng: " + place.getLatLng());
                 mapViewWrapper.placeMarkerAndZoom(place.getLatLng());
             }
         } else if(resultCode == Activity.RESULT_CANCELED){

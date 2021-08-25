@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import androidx.annotation.Nullable;
+
+import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,8 +28,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.libraries.places.api.model.Place;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -156,8 +157,15 @@ public abstract class PhotoEditableBaseFragment extends EditableBaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == MapViewWrapper.REQUEST_PLACE) {
-                Place place = PlacePicker.getPlace(getActivity(), data);
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                Log.i(Configuration.TAG, "PhotoEditableBaseFragment#onActivityResult: Place received. Name: "
+                        + place.getName()
+                        + ", ID: " + place.getId()
+                        + ", ID: " + place.getLatLng());
                 mapViewWrapper.placeMarkerAndZoom(place.getLatLng());
+
+//                Place place = PlacePicker.getPlace(getActivity(), data);
+//                mapViewWrapper.placeMarkerAndZoom(place.getLatLng());
             } else if (requestCode == REQUEST_IMAGE){
                 Log.i(Configuration.TAG, "PhotoEditableBaseFragment#onActivityResult: Image Received.");
 
