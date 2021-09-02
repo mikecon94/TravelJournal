@@ -9,13 +9,13 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/holiday_list"
-        android:name="com.mikepconroy.traveljournal.HolidayFragment"
+        android:name="com.mikeconroy.traveljournal.HolidayFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
-        tools:context="com.mikepconroy.android.traveljournal.holidays.HolidayListFragment"
+        tools:context="com.mikeconroy.android.traveljournal.holidays.HolidayListFragment"
         tools:listitem="@layout/fragment_holiday_list_item" />
 
     <TextView

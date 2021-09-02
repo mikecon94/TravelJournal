@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.mikepconroy.traveljournal.fragments.photos.NewPhotoFragment">
+    tools:context=".fragments.photos.NewPhotoFragment">
 
 
     <ScrollView android:layout_width="match_parent"
@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            tools:context="com.mikepconroy.traveljournal.fragments.photos.NewPhotoFragment">
+            tools:context=".fragments.photos.NewPhotoFragment">
 
             <ImageView
                 android:id="@+id/photo_image"

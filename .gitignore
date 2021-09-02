@@ -9,4 +9,4 @@
 .externalNativeBuild
 .idea/*
 apikey.properties
-
+app/release
