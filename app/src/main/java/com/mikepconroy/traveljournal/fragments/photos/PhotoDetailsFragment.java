@@ -2,10 +2,14 @@ package com.mikepconroy.traveljournal.fragments.photos;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import android.util.Log;
@@ -37,6 +41,9 @@ import com.mikepconroy.traveljournal.model.db.AppDatabase;
 import com.mikepconroy.traveljournal.model.db.Holiday;
 import com.mikepconroy.traveljournal.model.db.Photo;
 import com.mikepconroy.traveljournal.model.db.Place;
+
+import java.io.File;
+import java.util.List;
 
 public class PhotoDetailsFragment extends Fragment {
 
@@ -115,15 +122,39 @@ public class PhotoDetailsFragment extends Fragment {
     }
 
     private void shareImage(){
-        Intent share = new Intent(Intent.ACTION_SEND);
-        share.setType("image/*");
+        Log.i(Configuration.TAG, "PhotoDetailsFragment: Sharing photo with path: " + imagePath);
 
-        if(imagePath.indexOf("file://") == -1){
-            imagePath = "file://" + imagePath;
+        if(imagePath.indexOf("file://") > -1){
+//          imagePath = "file://" + imagePath;
+            imagePath = imagePath.replace("file://", "");
         }
 
-        share.putExtra(Intent.EXTRA_STREAM, Uri.parse(imagePath));
-        startActivity(Intent.createChooser(share, "Share Image"));
+        Log.i(Configuration.TAG, "PhotoDetailsFragment: Creating Photo File: " + imagePath);
+
+        File imageFile = new File(imagePath);
+        Uri photoURI = FileProvider.getUriForFile(
+                getContext(),
+                getContext().getApplicationContext().getPackageName() + ".fileprovider",
+                imageFile);
+        Log.i(Configuration.TAG, "PhotoDetailsFragment: Photo URI Created.");
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_STREAM, photoURI);
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        Intent chooser = Intent.createChooser(intent, "Share Image");
+        List<ResolveInfo> resInfoList = getActivity().getPackageManager()
+                .queryIntentActivities(chooser,
+                        PackageManager.MATCH_DEFAULT_ONLY);
+
+        for (ResolveInfo resolveInfo : resInfoList) {
+            String packageName = resolveInfo.activityInfo.packageName;
+            getActivity().grantUriPermission(packageName, photoURI, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
+
+        Log.i(Configuration.TAG, "PhotoDetailsFragment: Starting Share Image Chooser.");
+        startActivity(chooser);
+//        startActivity(intent);
     }
 
     private void updatePhotoDetailsDisplay(Photo photo){
